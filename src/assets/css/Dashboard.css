@@ -1,0 +1,526 @@
+/* frontend/src/assets/css/Dashboard.css */
+
+
+/* GLOBAL VARIABLES & BASE     */
+:root {
+    --primary-red: #e74c3c;
+    --dark-bg: #222; 
+    --light-bg: #f7f7f7;
+    --text-color: #333;
+    --nav-bg: #fff;
+    --max-width: 1280px;
+}
+
+body {
+    margin: 0;
+    background-color: var(--light-bg);
+}
+
+.app-container {
+    font-family: 'Arial', sans-serif;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 0 20px;
+    max-width: var(--max-width);
+    margin: 0 auto;
+}
+
+
+/* 1. NAVBAR - MANAGED AND CLEANED LAYOUT */
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    border-bottom: 1px solid #ddd;
+    background-color: var(--nav-bg);
+    height: 60px; 
+}
+
+/* --- Group 1: Logo --- */
+.navbar-logo-group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; 
+}
+
+.navbar-logo-img {
+    height: 180px; 
+    width: auto;
+    object-fit: contain;
+}
+
+/* --- Group 2: Navigation Links --- */
+.navbar-links {
+    display: flex;
+    gap: 30px; 
+    flex-grow: 1; 
+    justify-content: center; 
+    padding: 0 40px; 
+}
+
+.navbar-link {
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 16px;
+    padding-bottom: 5px;
+    transition: color 0.2s, border-bottom 0.2s;
+    border-bottom: 2px solid transparent;
+    font-weight: 500; 
+}
+
+.navbar-link:hover {
+    color: var(--primary-red);
+    border-bottom: 2px solid var(--primary-red);
+}
+
+/* --- Group 3: Actions (Search, Host, Profile) --- */
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
+    flex-shrink: 0; 
+}
+
+/* Search Bar Styling */
+.search-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-search-box {
+    padding: 8px 15px;
+    padding-right: 35px; 
+    border-radius: 25px; 
+    border: 1px solid #ccc;
+    min-width: 200px; 
+    background-color: #f0f0f0; 
+    transition: background-color 0.2s;
+}
+
+.navbar-search-box:focus {
+    background-color: white;
+    border-color: var(--primary-red);
+    outline: none;
+}
+
+.search-icon {
+    position: absolute;
+    right: 15px;
+    color: #888;
+    font-size: 16px;
+    pointer-events: none; 
+}
+
+/* Host Button Styling */
+.navbar-host-button {
+    background-color: #e35a4d; 
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-host-button:hover {
+    background-color: var(--primary-red);
+}
+
+/* Profile Icon Styling */
+.navbar-icon.user-icon {
+    font-size: 30px; 
+    color: #555; 
+    cursor: pointer;
+}
+
+
+/* 2. HERO SECTION (MANUAL SLIDER & IMAGE) */
+
+
+/* Wrapper to contain both the image and the overlay content */
+.hero-section-wrapper {
+    position: relative;
+    max-width: var(--max-width);
+    margin: 20px auto;
+    border-radius: 10px;
+    height: 450px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Direct Image Element Styling */
+.hero-image-overlay-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1; 
+    transition: opacity 0.5s ease-in-out; 
+}
+
+/* Container for Content (Overlay) */
+.hero-container {
+    /* Full overlay area */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 0 40px;
+    z-index: 2; 
+    /* Increased dark overlay for better text contrast */
+    background: rgba(0, 0, 0, 0.4); 
+    
+    /* Fallback if no <img> is used, relies on CSS background */
+    background-size: cover;
+    background-position: center;
+}
+
+/* Featured Event Background Images (Only used as a fallback if the <img> fails) */
+.hero-edge-band {
+    background-image: url('https://via.placeholder.com/1280x450/333333/FFFFFF?text=EDGE+BAND+FEATURED');
+}
+.hero-purna-rai {
+    background-image: url('https://via.placeholder.com/1280x450/6A5ACD/FFFFFF?text=PURNA+RAI+FEATURED');
+}
+.hero-shadows {
+    background-image: url('https://via.placeholder.com/1280x450/8B0000/FFFFFF?text=SHADOWS+FEATURED');
+}
+
+/* 🚨 FIX: Made background transparent, relied on hero-container overlay */
+.hero-content {
+    background-color: transparent; 
+    padding: 20px 40px;
+    border-radius: 10px;
+    max-width: 80%;
+    /* backdrop-filter: none; */ /* Removed */
+}
+
+.hero-title {
+    font-size: 50px;
+    font-weight: 900;
+    margin-bottom: 5px;
+    /* Stronger text shadow for maximum readability */
+    text-shadow: 0 0 10px rgba(0,0,0,1); 
+}
+
+.hero-event-info-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* Adding a solid, bold look to the date/location info */
+.hero-info-text, .hero-info-text-location {
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    padding: 5px 12px;
+    border-radius: 5px;
+    display: inline-block;
+    backdrop-filter: blur(1px); /* Subtle blur for better separation */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.hero-package-detail {
+    font-size: 18px;
+    margin-bottom: 25px;
+    font-weight: 500;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.hero-timer-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+/* 🚨 TIMER BOX IMPROVEMENT */
+.hero-timer-box {
+    /* Semi-transparent dark background */
+    background-color: rgba(0, 0, 0, 0.7); 
+    padding: 10px 15px;
+    border-radius: 8px;
+    min-width: 70px;
+    
+    /* Modern shadow and border for a 'package' feel */
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.5), 0 4px 8px rgba(0, 0, 0, 0.5); 
+    border: 1px solid var(--primary-red);
+    transform: perspective(1px) translateZ(0); 
+    transition: transform 0.3s ease-out, box-shadow 0.3s;
+}
+
+.hero-timer-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.8), 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.hero-timer-value {
+    font-size: 40px; /* Bigger value for impact */
+    font-weight: 900;
+    line-height: 1; /* Tighter line height */
+    color: white;
+}
+
+.hero-timer-label {
+    font-size: 12px; /* Bigger label for clarity */
+    text-transform: uppercase;
+    font-weight: 500; 
+    color: #ddd;
+}
+
+.hero-button-row {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
+.hero-view-details-button, .hero-buy-ticket-button {
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+}
+
+.hero-view-details-button {
+    border: 2px solid white;
+    background-color: transparent;
+    color: white;
+}
+
+.hero-buy-ticket-button {
+    border: none;
+    background-color: var(--primary-red);
+    color: white;
+    /* Added lift effect */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); 
+}
+
+.hero-view-details-button:hover, .hero-buy-ticket-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.hero-buy-ticket-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Slider Indicators */
+.slider-indicators {
+    position: absolute;
+    bottom: 11px;
+    display: flex;
+    gap: 8px;
+    z-index: 3; 
+}
+
+.indicator {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.indicator.active {
+    background-color: var(--primary-red);
+    transform: scale(1.2);
+}
+
+
+/* 3. TRENDING EVENTS & GRID     */
+
+
+.trending-events-section {
+    padding: 40px 0 20px 0;
+}
+
+.trending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.trending-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.trending-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.trending-slider {
+    width: 150px;
+    accent-color: var(--primary-red);
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+/* 4. EVENT CARD - Clean & Modern Style */
+
+
+.event-card-container {
+    border: none; /* Removing harsh border */
+    border-radius: 12px; /* Smoother corners */
+    overflow: hidden;
+    /* Elevated, subtle modern shadow */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05); 
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    background-color: white;
+}
+
+.event-card-container:hover {
+    transform: translateY(-5px); /* Lift effect */
+    /* Stronger shadow on hover */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Image Wrapper for the actual image */
+.image-wrapper {
+    height: 160px; /* Slightly shorter image height */
+    overflow: hidden; 
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    background-color: var(--dark-bg); /* Fallback */
+}
+
+/* New style for the actual image element */
+.event-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Important for clean cropping */
+    display: block;
+    transition: transform 0.4s ease-in-out;
+}
+
+.event-card-container:hover .event-card-image {
+    transform: scale(1.05); /* Subtle zoom on hover */
+}
+
+/* --- DETAILS SECTION --- */
+
+.card-details {
+    padding: 15px; /* Increased padding for breathing room */
+}
+
+/* Event Title - New Element */
+.event-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 5px;
+}
+
+.date-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; /* More separation */
+    padding-top: 5px; 
+    border-top: 1px dashed #eee; /* Subtle separator */
+}
+
+.date-text {
+    font-size: 14px;
+    color: var(--primary-red); /* Highlight the date */
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.price-text {
+    font-weight: 900; /* Bolder price */
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.package-info {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0; /* Subtle separator */
+}
+
+.buy-button {
+    background-color: var(--primary-red); /* Using primary color */
+    color: white;
+    border: none;
+    padding: 10px 0; /* Slightly larger button */
+    border-radius: 8px; /* More rounded button */
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.4);
+}
+
+.buy-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.6);
+}
+
+/* --- DEPRECATED STYLES (Removed image overlay and old placeholders) --- */
+
+.event-image-overlay {
+    display: none; 
+}
+.event-edge, .event-johns, .event-shadows, .event-elements, .event-albatross, .event-purna {
+    background-image: none !important;
+}
+
+/* 5. FOOTER (Image-based)              */
+
+
+.footer-image-container {
+    margin-top: 40px;
+    background-color: var(--dark-bg);
+    /* Adding the red line from the previous design for continuity */
+    border-top: 5px solid var(--primary-red);
+    overflow: hidden;
+}
+
+.footer-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    /* This centers the image and limits its width, assuming the image itself has white space */
+    max-width: var(--max-width); 
+    margin: 0 auto;
+}
