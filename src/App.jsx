@@ -1,13 +1,21 @@
 // frontend/src/App.jsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard.jsx";
+// ----------------------------------------------------------------------
 
-// Import the Dashboard component from the pages directory
-import Dashboard from './pages/Dashboard.jsx'; 
-import './App.css'; // Keep the CSS import for global styles
+import AdminDashboard from "./pages/Admin_dashbaord.jsx"; 
+// ----------------------------------------------------------------------
+import "./App.css";
 
 function App() {
-  // The App component now acts as the main router/layout holder, 
-  // currently rendering only the Dashboard.
-  return <Dashboard />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;

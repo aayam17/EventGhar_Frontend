@@ -385,10 +385,11 @@ body {
 }
 
 .events-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
 }
+
 
 
 /* 4. EVENT CARD - Clean & Modern Style */
@@ -511,7 +512,6 @@ body {
 .footer-image-container {
     margin-top: 40px;
     background-color: var(--dark-bg);
-    /* Adding the red line from the previous design for continuity */
     border-top: 5px solid var(--primary-red);
     overflow: hidden;
 }
@@ -520,7 +520,41 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    /* This centers the image and limits its width, assuming the image itself has white space */
     max-width: var(--max-width); 
     margin: 0 auto;
+}
+
+/* --- 6. ADMIN SWITCH BUTTON (FIXED POSITION) --- */
+
+.admin-switch-btn-link {
+    /* Ensure the link doesn't interfere with positioning */
+    text-decoration: none;
+}
+
+.admin-switch-btn {
+    /* Fixed positioning makes it float relative to the viewport */
+    position: fixed;
+    bottom: 25px; /* Distance from the bottom edge */
+    right: 25px;  /* Distance from the right edge */
+    
+    background-color: #3498db; /* Blue color for distinction */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px; /* Slightly rounded corners */
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    
+    /* Strong shadow to make it pop */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s, transform 0.2s;
+    
+    /* Ensure it is above all other content */
+    z-index: 1000; 
+}
+
+.admin-switch-btn:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05); /* Slight lift */
 }

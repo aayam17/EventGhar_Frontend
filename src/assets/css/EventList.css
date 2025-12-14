@@ -1,0 +1,107 @@
+/* --- EventList.css --- */
+
+/* Utility messages */
+.loading-message, .error-message, .empty-message {
+    padding: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: var(--admin-text-light); /* Requires CSS variable from main dashboard */
+}
+.error-message {
+    color: var(--admin-primary-red); /* Requires CSS variable from main dashboard */
+    font-weight: 600;
+}
+.empty-message {
+    color: #3498db;
+    font-style: italic;
+}
+
+/* --- Event List Table Styles --- */
+/* Note: The .analytics-card styles should be in your main dashboard CSS */
+
+.event-list-card {
+    /* Optional: make the list wider on desktop */
+    grid-column: 1 / -1; 
+}
+
+.event-table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.event-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Ensures table is readable */
+}
+
+.event-table-container th, .event-table-container td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--admin-border-color); /* Requires CSS variable */
+    font-size: 14px;
+    color: var(--admin-text-light); /* Requires CSS variable */
+}
+
+.event-table-container th {
+    font-weight: 600;
+    color: var(--admin-text-dark); /* Requires CSS variable */
+    background-color: var(--admin-bg-light); /* Requires CSS variable */
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.event-table-container tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.event-title-col {
+    font-weight: 600;
+    color: var(--admin-text-dark); /* Requires CSS variable */
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.status-live {
+    background-color: #e6f7ee;
+    color: #2ecc71;
+    border: 1px solid #2ecc71;
+}
+/* Placeholder statuses */
+.status-draft {
+    background-color: #fff0e6;
+    color: #ffb700;
+    border: 1px solid #ffb700;
+}
+
+/* Action Buttons */
+.action-btn {
+    padding: 6px 10px;
+    margin-right: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.2s;
+    border: none;
+}
+.action-btn:hover {
+    opacity: 0.8;
+}
+.edit-btn {
+    background-color: #3498db;
+    color: white;
+}
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}

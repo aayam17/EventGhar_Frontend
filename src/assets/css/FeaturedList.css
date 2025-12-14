@@ -1,0 +1,143 @@
+/* ======================================================
+   FEATURED EVENTS PANEL
+====================================================== */
+
+.featured-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #ececec;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+}
+
+/* Title */
+.featured-card .card-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* Divider */
+.featured-divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e5e5e5, transparent);
+  margin-bottom: 24px;
+}
+
+/* ======================================================
+   EMPTY STATE
+====================================================== */
+
+.featured-empty {
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 15px;
+  color: #666;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px dashed #ddd;
+}
+
+/* ======================================================
+   FEATURED EVENT ROW
+====================================================== */
+
+.featured-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 18px 6px;
+  border-bottom: 1px solid #f1f1f1;
+  gap: 20px;
+}
+
+.featured-row:last-child {
+  border-bottom: none;
+}
+
+/* LEFT INFO */
+.featured-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* 🔥 FIXED TITLE VISIBILITY */
+.featured-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111 !important;      /* ✅ FORCE BLACK */
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* Date */
+.featured-date {
+  font-size: 13px;
+  color: #777;
+}
+
+/* ======================================================
+   ACTION BUTTONS
+====================================================== */
+
+.featured-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Base button */
+.featured-btn {
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Enable / Disable */
+.featured-btn.toggle {
+  background: #f1f5f9;
+  color: #2563eb;
+  border: 1px solid #dbeafe;
+}
+
+.featured-btn.toggle:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+/* Delete */
+.featured-btn.delete {
+  background: #fff5f5;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.featured-btn.delete:hover {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+  .featured-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .featured-actions {
+    justify-content: flex-end;
+  }
+}
