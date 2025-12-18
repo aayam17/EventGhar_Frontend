@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/Dashboard.css";
+import Navbar from "../components/Navbar";
 
-/* ---------------- ASSETS ---------------- */
+/* ===================== ASSETS ===================== */
 import EventGharLogo from "../assets/logo.png";
 import FooterImage from "../assets/footer.png";
 
 /* =====================================================
-   COUNTDOWN HELPER (SAFE)
+   COUNTDOWN HELPER
 ===================================================== */
 const getCountdownTime = (targetDate) => {
   const diff = +new Date(targetDate) - +new Date();
-
   if (isNaN(diff) || diff <= 0) return null;
 
   return {
@@ -21,101 +22,69 @@ const getCountdownTime = (targetDate) => {
   };
 };
 
-/* =====================================================
-   NAVBAR
-===================================================== */
-const Navbar = () => (
-  <nav className="navbar-container">
-    <img src={EventGharLogo} className="navbar-logo-img" alt="logo" />
-
-    <div className="navbar-links">
-      {["Home", "Events", "Contact Us", "My Bookings"].map((link) => (
-        <a key={link} href="#" className="navbar-link">
-          {link}
-        </a>
-      ))}
-    </div>
-
-    <div className="navbar-actions">
-      <input className="navbar-search-box" placeholder="Search here" />
-      <button className="navbar-host-button">Host an Event</button>
-      <span className="navbar-icon user-icon">👤</span>
-    </div>
-  </nav>
-);
 
 /* =====================================================
-   FEATURED EVENTS SLIDER (ROBUST & SAFE)
+   FEATURED EVENTS SLIDER
 ===================================================== */
 const FeaturedEventsSlider = () => {
   const [events, setEvents] = useState([]);
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(null);
 
-  /* FETCH FEATURED EVENTS */
   useEffect(() => {
     fetch("http://127.0.0.1:5001/api/featured-events")
       .then((res) => res.json())
-      .then((data) => {
-        // Extra frontend safety (auto-hide expired)
-        const now = new Date();
-        const valid = data.filter(
-          (e) =>
-            !e.expiryDate || new Date(e.expiryDate) > now
-        );
-        setEvents(valid);
-      })
+      .then(setEvents)
       .catch(() => setEvents([]));
   }, []);
 
-  /* COUNTDOWN TIMER */
   useEffect(() => {
     if (!events.length) return;
 
     const updateTimer = () =>
       setTimeLeft(
-        getCountdownTime(events[index].eventDateTime)
+        getCountdownTime(events[currentIndex].eventDateTime)
       );
 
     updateTimer();
-    const timer = setInterval(updateTimer, 1000);
-    return () => clearInterval(timer);
-  }, [events, index]);
+    const interval = setInterval(updateTimer, 1000);
 
-  /* AUTO SLIDE */
+    return () => clearInterval(interval);
+  }, [events, currentIndex]);
+
   useEffect(() => {
     if (events.length <= 1) return;
 
-    const auto = setInterval(() => {
-      setIndex((prev) => (prev + 1) % events.length);
+    const autoSlide = setInterval(() => {
+      setCurrentIndex((i) => (i + 1) % events.length);
     }, 6000);
 
-    return () => clearInterval(auto);
+    return () => clearInterval(autoSlide);
   }, [events]);
 
   if (!events.length || !timeLeft) return null;
 
-  const event = events[index];
+  const event = events[currentIndex];
 
   return (
-    <div className="hero-section-wrapper">
+    <section className="hero-section-wrapper">
       <img
         src={event.imageSrc}
-        className="hero-image-overlay-img"
         alt={event.title}
+        className="hero-image-overlay-img"
       />
 
       <div className="hero-container">
         <div className="hero-content">
-          <h2 className="hero-title">{event.title}</h2>
+          <h1 className="hero-title">{event.title}</h1>
           <p className="hero-package-detail">{event.subtitle}</p>
           <p className="hero-info-text-location">{event.venue}</p>
 
           <div className="hero-timer-row">
-            {Object.entries(timeLeft).map(([key, val]) => (
-              <div key={key} className="hero-timer-box">
-                <div className="hero-timer-value">{val}</div>
-                <div className="hero-timer-label">{key}</div>
+            {Object.entries(timeLeft).map(([label, value]) => (
+              <div key={label} className="hero-timer-box">
+                <div className="hero-timer-value">{value}</div>
+                <div className="hero-timer-label">{label}</div>
               </div>
             ))}
           </div>
@@ -129,118 +98,170 @@ const FeaturedEventsSlider = () => {
             </button>
           </div>
         </div>
-
-        <div className="slider-indicators">
-          {events.map((_, i) => (
-            <span
-              key={i}
-              className={`indicator ${i === index ? "active" : ""}`}
-              onClick={() => setIndex(i)}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* =====================================================
-   EVENT CARD (TRENDING)
-===================================================== */
-const EventCard = ({ event }) => (
-  <div className="event-card-container">
-    <div className="image-wrapper">
-      <img
-        src={event.imageSrc}
-        alt={event.title}
-        className="event-card-image"
-      />
-    </div>
-
-    <div className="card-details">
-      <p className="event-card-title">{event.title}</p>
-
-      <div className="date-price-row">
-        <span className="date-text">🗓 {event.formattedDate}</span>
-        <span className="price-text">
-          Rs {event.price.toLocaleString()}
-        </span>
-      </div>
-
-      <p className="package-info">
-        Packages: {event.packages || "Standard"}
-      </p>
-
-      <button className="buy-button">BUY</button>
-    </div>
-  </div>
-);
-
-/* =====================================================
-   TRENDING EVENTS
-===================================================== */
-const TrendingEvents = () => {
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5001/api/events")
-      .then((res) => res.json())
-      .then(setEvents)
-      .catch(() => setEvents([]));
-  }, []);
-
-  return (
-    <section className="trending-events-section">
-      <div className="trending-header">
-        <h2 className="trending-title">Trending Events</h2>
-      </div>
-
-      <div className="events-grid">
-        {events.length === 0 && <p>No events added yet.</p>}
-        {events.map((event) => (
-          <EventCard key={event._id} event={event} />
-        ))}
       </div>
     </section>
   );
 };
 
 /* =====================================================
+   EVENT CARD
+===================================================== */
+const EventCard = ({ event }) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="event-card-container">
+      <div className="image-wrapper">
+        <img
+          src={event.imageSrc}
+          alt={event.title}
+          className="event-card-image"
+        />
+      </div>
+
+      <div className="card-details">
+        <p className="event-card-title">{event.title}</p>
+
+        <div className="date-price-row">
+          <span>🗓 {event.formattedDate}</span>
+          <span>Rs {event.price.toLocaleString()}</span>
+        </div>
+
+        <p className="package-info">
+          Packages: {event.packages || "Standard"}
+        </p>
+
+        {/* ✅ FIXED BUY BUTTON */}
+        <button
+          className="buy-button"
+          onClick={() => navigate(`/events/${event._id}`)}
+        >
+          BUY
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
+/* =====================================================
+   TRENDING EVENTS
+===================================================== */
+const TrendingEvents = React.forwardRef(
+  ({ searchTerm, priceRange, setPriceRange }, ref) => {
+    const [events, setEvents] = useState([]);
+
+    useEffect(() => {
+      fetch("http://127.0.0.1:5001/api/events")
+        .then((res) => res.json())
+        .then(setEvents)
+        .catch(() => setEvents([]));
+    }, []);
+
+    const filteredEvents = events.filter((event) => {
+      const matchSearch = event.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
+      const matchPrice =
+        event.price >= priceRange[0] &&
+        event.price <= priceRange[1];
+
+      return matchSearch && matchPrice;
+    });
+
+    return (
+      <section ref={ref} className="trending-events-section">
+        <div className="trending-header">
+          <h2 className="trending-title">Trending Events</h2>
+
+          <div className="price-filter">
+            <span className="price-label">
+              Max Price: <strong>Rs {priceRange[1]}</strong>
+            </span>
+
+            <input
+              type="range"
+              min="0"
+              max="2000"
+              step="500"
+              value={priceRange[1]}
+              onChange={(e) =>
+                setPriceRange([0, Number(e.target.value)])
+              }
+              className="price-slider"
+            />
+          </div>
+        </div>
+
+        <div className="events-grid">
+          {filteredEvents.length === 0 && <p>No events found.</p>}
+          {filteredEvents.map((event) => (
+            <EventCard key={event._id} event={event} />
+          ))}
+        </div>
+      </section>
+    );
+  }
+);
+
+/* =====================================================
    FOOTER
 ===================================================== */
 const Footer = () => (
   <footer className="footer-image-container">
-    <img src={FooterImage} className="footer-image" alt="footer" />
+    <img src={FooterImage} alt="Footer" className="footer-image" />
   </footer>
 );
 
 /* =====================================================
-   ADMIN SWITCH
+   ADMIN BUTTON
 ===================================================== */
 const AdminSwitchButton = () => (
-  <a href="/admin" className="admin-switch-btn-link">
+  <a href="/admin">
     <button className="admin-switch-btn">🔑 Admin Panel</button>
   </a>
 );
 
 /* =====================================================
-   MAIN DASHBOARD EXPORT
+   MAIN DASHBOARD
 ===================================================== */
-const Dashboard = () => (
-  <div className="app-container">
-    <Navbar />
+const Dashboard = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 100000]);
 
-    <main className="main-content">
-      {/* 🔥 FEATURED EVENTS (ABOVE TRENDING) */}
-      <FeaturedEventsSlider />
+  const trendingRef = useRef(null);
 
-      {/* 🔥 TRENDING EVENTS */}
-      <TrendingEvents />
-    </main>
+  const handleEventsClick = () => {
+    trendingRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
-    <Footer />
-    <AdminSwitchButton />
-  </div>
-);
+  return (
+    <div className="app-container">
+      <Navbar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        onEventsClick={handleEventsClick}
+      />
+
+      <main className="main-content">
+        <FeaturedEventsSlider />
+
+        <TrendingEvents
+          ref={trendingRef}
+          searchTerm={searchTerm}
+          priceRange={priceRange}
+          setPriceRange={setPriceRange}
+        />
+      </main>
+
+      <Footer />
+      <AdminSwitchButton />
+    </div>
+  );
+};
 
 export default Dashboard;

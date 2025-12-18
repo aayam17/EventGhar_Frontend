@@ -8,6 +8,17 @@ const AddEvent = ({ onClose, onEventAdded }) => {
     price: "",
     formattedPrice: "",
     packages: "",
+    description: "",
+    time: "",
+    organizerName: "",
+    venueName: "",
+    venueAddress: "",
+    mapEmbedUrl: "",
+    fanPitPrice: "",
+    vipPrice: "",
+    vvipPrice: "",
+
+
     image: null,
   });
 
@@ -36,6 +47,31 @@ const AddEvent = ({ onClose, onEventAdded }) => {
   data.append("formattedPrice", formData.formattedPrice);
   data.append("packages", formData.packages);
   data.append("image", formData.image);
+  data.append("description", formData.description);
+data.append("time", formData.time);
+
+data.append(
+  "organizer",
+  JSON.stringify({ name: formData.organizerName })
+);
+
+data.append(
+  "venue",
+  JSON.stringify({
+    name: formData.venueName,
+    address: formData.venueAddress,
+    mapEmbedUrl: formData.mapEmbedUrl,
+  })
+);
+
+data.append(
+  "tickets",
+  JSON.stringify([
+    { type: "FAN PIT", price: formData.fanPitPrice },
+    { type: "VIP", price: formData.vipPrice },
+    { type: "VVIP", price: formData.vvipPrice },
+  ])
+);
 
   try {
     const res = await fetch("http://localhost:5001/api/events", {
@@ -110,6 +146,23 @@ const AddEvent = ({ onClose, onEventAdded }) => {
           onChange={handleChange}
           required
         />
+        <textarea
+  name="description"
+  placeholder="Event Description"
+  className="input-box full"
+  onChange={handleChange}
+/>
+
+<input name="time" placeholder="Event Time" className="input-box" onChange={handleChange} />
+<input name="organizerName" placeholder="Organizer Name" className="input-box" onChange={handleChange} />
+<input name="venueName" placeholder="Venue Name" className="input-box" onChange={handleChange} />
+<input name="venueAddress" placeholder="Venue Address" className="input-box full" onChange={handleChange} />
+<input name="mapEmbedUrl" placeholder="Google Map Embed URL" className="input-box full" onChange={handleChange} />
+
+<input name="fanPitPrice" placeholder="Fan Pit Price" className="input-box" onChange={handleChange} />
+<input name="vipPrice" placeholder="VIP Price" className="input-box" onChange={handleChange} />
+<input name="vvipPrice" placeholder="VVIP Price" className="input-box" onChange={handleChange} />
+
 
         <button className="add-event-btn">Add Event</button>
       </form>

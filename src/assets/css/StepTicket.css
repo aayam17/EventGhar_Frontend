@@ -1,0 +1,153 @@
+/* ===============================
+   STEP 1 – TICKET DETAILS
+================================ */
+
+.step-card {
+  max-width: 560px;
+  margin: 40px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* BUY ROW (FIGMA STYLE) */
+.ticket-buy-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+
+  padding: 18px 22px;
+  background: #fff;
+  border-radius: 14px;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+}
+
+.ticket-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333;
+}
+
+.ticket-price {
+  font-weight: 700;
+  font-size: 15px;
+  color: #333;
+}
+
+/* BUY BUTTON */
+.ticket-buy-btn {
+  background: #2c3e90;
+  color: #fff;
+  border: none;
+  padding: 8px 22px;
+  border-radius: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ticket-buy-btn:hover {
+  background: #1f2f75;
+}
+
+/* SUMMARY ROW */
+.summary-box {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  padding: 16px 22px;
+  border-radius: 14px;
+  background: #fff;
+
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  font-size: 14px;
+}
+
+/* TOTAL */
+.summary-box.total {
+  background: #fafafa;
+  font-size: 16px;
+}
+
+/* PROMO */
+.promo label {
+  font-size: 14px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.promo input {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+}
+
+/* NEXT BUTTON */
+.next-green {
+  margin: 30px auto 0;
+  padding: 14px 60px;
+  background: #6aa84f;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(106,168,79,0.4);
+}
+
+/* PROMO INPUT + APPLY BUTTON */
+.promo-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.promo-input-wrapper input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.promo-apply-btn {
+  background: #2c3e90;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.promo-apply-btn:hover {
+  background: #1f2f75;
+}
+
+/* PROMO STATES */
+.promo-success {
+  border-color: #2ecc71 !important;
+}
+
+.promo-error {
+  border-color: #e74c3c !important;
+}
+
+.promo-text {
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.promo-text.success {
+  color: #2ecc71;
+}
+
+.promo-text.error {
+  color: #e74c3c;
+}

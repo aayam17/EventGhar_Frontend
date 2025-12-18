@@ -1,56 +1,69 @@
 /* ======================================================
-   FEATURED EVENTS PANEL
+   FEATURED EVENTS PANEL – PREMIUM
 ====================================================== */
 
 .featured-card {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 28px;
+  border-radius: 18px;
+  padding: 28px 26px;
   border: 1px solid #ececec;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 /* Title */
 .featured-card .card-title {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 800;
   color: #111;
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
+  letter-spacing: -0.3px;
 }
 
 /* Divider */
 .featured-divider {
   height: 1px;
-  background: linear-gradient(to right, transparent, #e5e5e5, transparent);
-  margin-bottom: 24px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    #e6e6e6,
+    transparent
+  );
+  margin-bottom: 26px;
 }
 
 /* ======================================================
-   EMPTY STATE
+   EMPTY STATE – FRIENDLY
 ====================================================== */
 
 .featured-empty {
-  padding: 48px 24px;
+  padding: 50px 24px;
   text-align: center;
   font-size: 15px;
-  color: #666;
-  background: #fafafa;
-  border-radius: 12px;
+  color: #777;
+  background: linear-gradient(#fafafa, #f7f7f7);
+  border-radius: 14px;
   border: 1px dashed #ddd;
 }
 
 /* ======================================================
-   FEATURED EVENT ROW
+   FEATURED EVENT ROW – CLEAN & CLEAR
 ====================================================== */
 
 .featured-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 18px 6px;
+  align-items: center;
+  padding: 18px 10px;
   border-bottom: 1px solid #f1f1f1;
-  gap: 20px;
+  gap: 22px;
+  transition: background-color 0.25s ease;
+}
+
+.featured-row:hover {
+  background-color: #fafafa;
 }
 
 .featured-row:last-child {
@@ -66,13 +79,14 @@
   min-width: 0;
 }
 
-/* 🔥 FIXED TITLE VISIBILITY */
+/* Event title */
 .featured-title {
   font-size: 16px;
   font-weight: 700;
-  color: #111 !important;      /* ✅ FORCE BLACK */
-  line-height: 1.4;
+  color: #111 !important;
+  line-height: 1.35;
   word-break: break-word;
+  letter-spacing: -0.2px;
 }
 
 /* Date */
@@ -82,7 +96,7 @@
 }
 
 /* ======================================================
-   ACTION BUTTONS
+   ACTION BUTTONS – ADMIN GRADE
 ====================================================== */
 
 .featured-actions {
@@ -95,11 +109,15 @@
 .featured-btn {
   padding: 7px 16px;
   font-size: 12px;
-  font-weight: 600;
-  border-radius: 8px;
+  font-weight: 700;
+  border-radius: 9px;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
   white-space: nowrap;
 }
 
@@ -113,6 +131,8 @@
 .featured-btn.toggle:hover {
   background: #2563eb;
   color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
 }
 
 /* Delete */
@@ -125,6 +145,8 @@
 .featured-btn.delete:hover {
   background: #dc2626;
   color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25);
 }
 
 /* ======================================================
@@ -134,10 +156,12 @@
 @media (max-width: 768px) {
   .featured-row {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
+    padding: 16px 6px;
   }
 
   .featured-actions {
     justify-content: flex-end;
+    margin-top: 10px;
   }
 }

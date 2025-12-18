@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
+
 import AddEvent from "./AddEvent";
 import EventList from "./EventList";
 import AddFeaturedEvent from "./AddFeaturedEvent";
+import FeaturedManager from "./FeaturedManager";
+import OrganizerRequests from "./OrganizerRequests";
+import AdminPromo from "./AdminPromo";
+import CustomerList from "./CustomerList"; // ✅ ADDED
 
 
 
@@ -33,76 +38,6 @@ const EventIconSVG = ({ className }) => (
   </svg>
 );
 
-/* ================= FEATURED MANAGER ================= */
-const FeaturedManager = () => {
-  const [events, setEvents] = useState([]);
-
-  const load = async () => {
-    try {
-      const res = await fetch("http://127.0.0.1:5001/api/featured-events");
-      const data = await res.json();
-      setEvents(Array.isArray(data) ? data : []);
-    } catch {
-      setEvents([]);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  const toggle = async (id) => {
-    await fetch(
-      `http://127.0.0.1:5001/api/featured-events/${id}/toggle`,
-      { method: "PATCH" }
-    );
-    load();
-  };
-
-  const remove = async (id) => {
-    if (!window.confirm("Remove featured event?")) return;
-    await fetch(
-      `http://127.0.0.1:5001/api/featured-events/${id}`,
-      { method: "DELETE" }
-    );
-    load();
-  };
-
-  return (
-    <div className="analytics-card">
-      <h3 className="card-title">Featured Events</h3>
-
-      {events.length === 0 && <p>No featured events yet.</p>}
-
-      {events.map((e) => (
-        <div
-          key={e._id}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: "12px 0",
-            borderBottom: "1px solid #eee",
-          }}
-        >
-          <div>
-            <strong>{e.title}</strong>
-            <div style={{ fontSize: 12, color: "#777" }}>
-              {new Date(e.eventDateTime).toLocaleString()}
-            </div>
-          </div>
-
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => toggle(e._id)}>
-              {e.isActive ? "Disable" : "Enable"}
-            </button>
-            <button onClick={() => remove(e._id)}>Delete</button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
 
 /* ------------------ SIDEBAR ------------------ */
 const Sidebar = ({ activeItem, setActiveItem, onAdd }) => {
@@ -206,12 +141,24 @@ const AdminDashboard = () => {
     { label: "Gross Sales", value: "1.2M", icon: "💰", color: "#3498db" },
   ];
 
+  /* ------------------ CONTENT SWITCH ------------------ */
   const renderContent = () => {
     if (activeItem === "Events")
       return <EventList onEventChange={setEventCount} />;
 
     if (activeItem === "Featured")
       return <FeaturedManager />;
+
+    if (activeItem === "Customer")
+      return <CustomerList />; // ✅ FIXED
+
+    if (activeItem === "Organizer")
+      return (
+        <>
+          <AdminPromo />
+          <OrganizerRequests />
+        </>
+      );
 
     return (
       <div className="metric-cards-container">
@@ -268,7 +215,6 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
 
 
 // --- 7. Styles for Admin Dashboard (Updated for SVG) ---

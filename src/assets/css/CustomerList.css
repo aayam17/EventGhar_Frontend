@@ -1,0 +1,145 @@
+/* ===============================
+   ADMIN – CUSTOMER ORDERS (MODERN)
+================================ */
+
+.customer-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Order card */
+.order-card {
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 14px;
+  border: 1px solid var(--admin-border-color);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+}
+
+/* Header */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.customer-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--admin-text-dark);
+}
+
+.customer-email {
+  font-size: 13px;
+  color: var(--admin-text-light);
+  margin-top: 2px;
+}
+
+/* Right side actions */
+.order-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.order-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* Delete button */
+.delete-btn {
+  background: #fff;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* Event title */
+.event-title {
+  font-size: 14px;
+  margin: 10px 0;
+  color: var(--admin-text-dark);
+}
+
+/* Ticket list */
+.ticket-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.ticket-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 14px;
+  border-bottom: 1px dashed var(--admin-border-color);
+}
+
+.ticket-list li:last-child {
+  border-bottom: none;
+}
+
+/* Summary */
+.order-summary {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--admin-text-light);
+}
+
+.order-summary p {
+  margin: 4px 0;
+}
+
+.order-total {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--admin-text-dark);
+}
+
+/* Empty */
+.empty-text {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .order-card {
+    padding: 16px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .order-actions {
+    align-self: flex-end;
+  }
+}

@@ -1,0 +1,36 @@
+.host-wrapper {
+  max-width: 1100px;
+  margin: 60px auto;
+  text-align: center;
+}
+
+.host-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.host-form input,
+.host-form textarea {
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid #bbb;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.host-form textarea {
+  grid-column: span 2;
+}
+
+.submit-btn {
+  grid-column: span 2;
+  width: 220px;
+  margin: 30px auto 0;
+  background: #5a9c32;
+  color: #fff;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+}
