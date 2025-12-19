@@ -43,9 +43,15 @@ const CustomerList = () => {
             </div>
 
             <div className="order-actions">
-              <span className="order-status">
-                {order.payment.status}
+              {/* ✅ STATUS BADGE */}
+              <span
+                className={`order-status ${
+                  order.used ? "verified" : ""
+                }`}
+              >
+                {order.used ? "TICKET VERIFIED" : order.payment.status}
               </span>
+
               <button
                 className="delete-btn"
                 onClick={() => handleDelete(order._id)}

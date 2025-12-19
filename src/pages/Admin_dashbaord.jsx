@@ -43,6 +43,10 @@ const Sidebar = ({ activeItem, setActiveItem, onAdd }) => {
     { name: "Events", icon: EventIconSVG },
     { name: "Featured", icon: "⭐" },
     { name: "Customer", icon: "🧑‍💻" },
+
+    // ✅ ADDED (QR SCANNER)
+    { name: "Scan Ticket", icon: "🎫" },
+
     { name: "Refund", icon: "🔄" },
     { name: "Organizer", icon: "🏢" },
     { name: "Settings", icon: "⚙️" },
@@ -110,6 +114,50 @@ const Modal = ({ isOpen, onClose, children }) => {
         </button>
         {children}
       </div>
+    </div>
+  );
+};
+
+/* ================== QR SCANNER (INLINE) ================== */
+// ✅ ADDED (QR SCANNER)
+import { Html5QrcodeScanner } from "html5-qrcode";
+
+const AdminQRScanner = () => {
+  useEffect(() => {
+    const scanner = new Html5QrcodeScanner(
+      "qr-reader",
+      { fps: 10, qrbox: 250 },
+      false
+    );
+
+    scanner.render(
+      async (decodedText) => {
+        try {
+          const res = await fetch(
+            "http://localhost:5001/api/orders/verify",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ticketId: decodedText }),
+            }
+          );
+
+          const data = await res.json();
+          alert(data.message);
+        } catch {
+          alert("Verification failed");
+        }
+      },
+      () => {}
+    );
+
+    return () => scanner.clear().catch(() => {});
+  }, []);
+
+  return (
+    <div style={{ maxWidth: 420 }}>
+      <h3>🎫 Scan Ticket QR</h3>
+      <div id="qr-reader" />
     </div>
   );
 };
@@ -202,6 +250,10 @@ const AdminDashboard = () => {
         </>
       );
 
+    // ✅ ADDED (QR SCANNER)
+    if (activeItem === "Scan Ticket")
+      return <AdminQRScanner />;
+
     return (
       <div className="metric-cards-container">
         {metrics.map((m) => (
@@ -257,6 +309,7 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
 
 // --- 7. Styles for Admin Dashboard (Updated for SVG) ---
 const AdminDashboardStyles = `

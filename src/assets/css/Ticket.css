@@ -1,0 +1,143 @@
+/* ===============================
+   TICKET PAGE WRAPPER
+================================ */
+.ticket-page {
+  min-height: 100vh;
+  background: #f6f7fb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+/* ===============================
+   TICKET CARD
+================================ */
+.ticket-card {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+/* ===============================
+   HEADER
+================================ */
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 16px;
+}
+
+.ticket-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+}
+
+.ticket-header p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ===============================
+   STATUS
+================================ */
+.success {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+/* ===============================
+   BODY
+================================ */
+.ticket-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  gap: 32px;
+}
+
+/* ===============================
+   INFO SECTION
+================================ */
+.ticket-info {
+  flex: 1;
+}
+
+.ticket-info p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.ticket-info strong {
+  color: #111;
+}
+
+/* ===============================
+   QR SECTION
+================================ */
+.ticket-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ticket-qr p {
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+}
+
+/* ===============================
+   ACTIONS
+================================ */
+.ticket-actions {
+  margin-top: 28px;
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: center;
+}
+
+.download-btn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  padding: 14px 48px;
+  border-radius: 30px;
+  border: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+}
+
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 26px rgba(34, 197, 94, 0.35);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .ticket-body {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .ticket-info {
+    width: 100%;
+  }
+}

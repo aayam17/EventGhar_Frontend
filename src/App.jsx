@@ -4,6 +4,7 @@ import AdminDashboard from "./pages/Admin_dashbaord.jsx";
 import EventDetails from "./pages/EventDetails.jsx"; 
 import HostEvent from "./pages/HostEvent";
 import Checkout from "./pages/Checkout.jsx";
+import Ticket from "./pages/Ticket";
 
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
@@ -21,6 +22,7 @@ function App() {
         <Route path="/host" element={<HostEvent />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
+        <Route path="/ticket/:orderId" element={<Ticket />} />
       </Routes>
     </Router>
   );
