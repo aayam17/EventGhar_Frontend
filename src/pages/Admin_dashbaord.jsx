@@ -6,9 +6,7 @@ import AddFeaturedEvent from "./AddFeaturedEvent";
 import FeaturedManager from "./FeaturedManager";
 import OrganizerRequests from "./OrganizerRequests";
 import AdminPromo from "./AdminPromo";
-import CustomerList from "./CustomerList"; // ✅ ADDED
-
-
+import CustomerList from "./CustomerList";
 
 /* ------------------ CONSTANTS ------------------ */
 const EventGharLogo =
@@ -37,7 +35,6 @@ const EventIconSVG = ({ className }) => (
     <line x1="3" y1="10" x2="21" y2="10" />
   </svg>
 );
-
 
 /* ------------------ SIDEBAR ------------------ */
 const Sidebar = ({ activeItem, setActiveItem, onAdd }) => {
@@ -124,21 +121,66 @@ const AdminDashboard = () => {
   const [featuredModal, setFeaturedModal] = useState(false);
   const [eventCount, setEventCount] = useState(0);
 
+  const [totalSales, setTotalSales] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
+
   const fetchEventsCount = async () => {
     const res = await fetch("http://127.0.0.1:5001/api/events");
     const data = await res.json();
     setEventCount(data.length);
   };
 
+  const fetchSalesData = async () => {
+    try {
+      const res = await fetch("http://localhost:5001/api/orders");
+      const orders = await res.json();
+
+      const paidOrders = orders.filter(
+        (o) => o.payment?.status === "PAID"
+      );
+
+      const total = paidOrders.reduce(
+        (sum, o) => sum + (o.total || 0),
+        0
+      );
+
+      setTotalSales(total);
+      setCustomerCount(paidOrders.length);
+    } catch (err) {
+      console.error("Failed to fetch sales data", err);
+    }
+  };
+
   useEffect(() => {
     fetchEventsCount();
+    fetchSalesData();
   }, []);
 
   const metrics = [
-    { label: "Income", value: "450K", icon: "📊", color: "#ffb700" },
-    { label: "Customers", value: 110, icon: "🧑‍💻", color: "#55aaff" },
-    { label: "Events Live", value: eventCount, icon: "🎉", color: "#2ecc71" },
-    { label: "Gross Sales", value: "1.2M", icon: "💰", color: "#3498db" },
+    {
+      label: "Income",
+      value: `NPR ${totalSales.toLocaleString()}`,
+      icon: "📊",
+      color: "#ffb700",
+    },
+    {
+      label: "Customers",
+      value: customerCount,
+      icon: "🧑‍💻",
+      color: "#55aaff",
+    },
+    {
+      label: "Events Live",
+      value: eventCount,
+      icon: "🎉",
+      color: "#2ecc71",
+    },
+    {
+      label: "Gross Sales",
+      value: `NPR ${totalSales.toLocaleString()}`,
+      icon: "💰",
+      color: "#3498db",
+    },
   ];
 
   /* ------------------ CONTENT SWITCH ------------------ */
@@ -150,7 +192,7 @@ const AdminDashboard = () => {
       return <FeaturedManager />;
 
     if (activeItem === "Customer")
-      return <CustomerList />; // ✅ FIXED
+      return <CustomerList />;
 
     if (activeItem === "Organizer")
       return (
@@ -215,7 +257,6 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
 
 // --- 7. Styles for Admin Dashboard (Updated for SVG) ---
 const AdminDashboardStyles = `

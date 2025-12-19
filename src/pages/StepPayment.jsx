@@ -1,80 +1,61 @@
-import { useState } from "react";
+const StepPayment = ({ order, event }) => {
+  const handleEsewaPay = async () => {
+    if (!order.total || order.total <= 0) {
+      alert("Invalid total amount");
+      return;
+    }
 
-const StepPayment = ({ order, event, prev }) => {
-  const [loading, setLoading] = useState(false);
-
-  const handlePaymentSuccess = async () => {
-    try {
-      setLoading(true);
-
-      // GUARD: User info required
-      if (!order.user?.name || !order.user?.email) {
-        alert("Please fill personal details before payment.");
-        return;
-      }
-
-      const subtotal = order.tickets.reduce(
-        (sum, t) => sum + t.price * t.qty,
-        0
-      );
-
-      const finalOrder = {
+    const res = await fetch("http://localhost:5001/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         eventId: event._id,
         eventTitle: event.title,
-
         user: order.user,
-
         tickets: order.tickets.filter((t) => t.qty > 0),
-
-        promoCode: order.promoCode || null,
+        promoCode: order.promoCode,
         discount: order.discount || 0,
+        subtotal: order.subtotal,
+        total: order.total, // ✅ REAL TOTAL NOW
+        payment: { method: "ESEWA", status: "PENDING" },
+      }),
+    });
 
-        subtotal,
-        total: subtotal - (order.discount || 0),
+    const savedOrder = await res.json();
 
-        payment: {
-          method: "ESEWA",
-          status: "PAID",
-          transactionId: "TXN-" + Date.now(),
-        },
-      };
-
-      const res = await fetch("http://localhost:5001/api/orders", {
+    const signRes = await fetch(
+      "http://localhost:5001/api/esewa/initiate-payment",
+      {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(finalOrder),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        console.error("ORDER API ERROR:", text);
-        throw new Error(text);
+        body: JSON.stringify({ orderId: savedOrder._id }),
       }
+    );
 
-      alert("Payment Successful 🎉\nCheck Admin → Customer section");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Payment failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    const data = await signRes.json();
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action =
+      "https://rc-epay.esewa.com.np/api/epay/main/v2/form";
+
+    Object.entries(data).forEach(([k, v]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = k;
+      input.value = v;
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
   };
 
   return (
     <div className="step-card payment">
-      <button
-        className="esewa-btn"
-        onClick={handlePaymentSuccess}
-        disabled={loading}
-      >
-        {loading ? "PROCESSING..." : "PAY WITH ESEWA"}
+      <button className="esewa-btn" onClick={handleEsewaPay}>
+        PAY WITH ESEWA
       </button>
-
-      <div className="actions">
-        <button className="prev-btn" onClick={prev} disabled={loading}>
-          PREVIOUS
-        </button>
-      </div>
     </div>
   );
 };

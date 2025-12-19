@@ -1,5 +1,5 @@
 import "../assets/css/StepTicket.css";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // ✅ add useEffect
 
 const StepTicket = ({ order, next }) => {
   const [promoCode, setPromoCode] = useState("");
@@ -21,7 +21,18 @@ const StepTicket = ({ order, next }) => {
     0
   );
 
-  // APPLY PROMO (PERSIST TO ORDER STATE)
+  const total = Math.max(subtotal - (order.discount || 0), 0);
+
+  // ✅🔥 THIS IS THE FIX (persist values for StepPayment)
+  useEffect(() => {
+    order.setOrder((prev) => ({
+      ...prev,
+      subtotal,
+      total,
+    }));
+  }, [subtotal, total]);
+
+  // APPLY PROMO
   const applyPromo = async () => {
     if (!promoCode || subtotal === 0) return;
 
@@ -57,8 +68,6 @@ const StepTicket = ({ order, next }) => {
       setPromoStatus("error");
     }
   };
-
-  const total = Math.max(subtotal - (order.discount || 0), 0);
 
   return (
     <div className="step-card">
