@@ -7,6 +7,8 @@ import FeaturedManager from "./FeaturedManager";
 import OrganizerRequests from "./OrganizerRequests";
 import AdminPromo from "./AdminPromo";
 import CustomerList from "./CustomerList";
+import AdminRefund from "./AdminRefund";
+
 
 /* ------------------ CONSTANTS ------------------ */
 const EventGharLogo =
@@ -241,6 +243,11 @@ const AdminDashboard = () => {
 
     if (activeItem === "Customer")
       return <CustomerList />;
+
+    // ✅ ADD THIS BLOCK
+    if (activeItem === "Refund")
+      return <AdminRefund />;
+
 
     if (activeItem === "Organizer")
       return (

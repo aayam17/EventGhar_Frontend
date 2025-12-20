@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/Navbar.css";
 import EventGharLogo from "../assets/logo.png";
 
@@ -7,7 +8,19 @@ const Navbar = ({
   setSearchTerm = () => {},
   onEventsClick,
 }) => {
-  const navLinks = ["Home", "Events", "Contact Us", "My Bookings"];
+  const navigate = useNavigate();
+
+  const navLinks = [
+    { label: "Home", path: "/" },
+    { label: "Events", path: "/events" },
+    { label: "Contact Us", path: "/contact" },
+    { label: "My Bookings", path: "/my-bookings" },
+  ];
+
+  const handleNav = (e, path) => {
+    e.preventDefault();
+    navigate(path);
+  };
 
   return (
     <nav className="navbar-container">
@@ -17,26 +30,33 @@ const Navbar = ({
           src={EventGharLogo}
           alt="Event Ghar Logo"
           className="navbar-logo-img"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
         />
 
         {/* LINKS */}
         <div className="navbar-links">
           {navLinks.map((link) =>
-            link === "Events" && onEventsClick ? (
+            link.label === "Events" && onEventsClick ? (
               <a
-                key={link}
-                href="#"
+                key={link.label}
+                href="/events"
                 className="navbar-link"
                 onClick={(e) => {
                   e.preventDefault();
                   onEventsClick();
                 }}
               >
-                {link}
+                {link.label}
               </a>
             ) : (
-              <a key={link} href="#" className="navbar-link">
-                {link}
+              <a
+                key={link.label}
+                href={link.path}
+                className="navbar-link"
+                onClick={(e) => handleNav(e, link.path)}
+              >
+                {link.label}
               </a>
             )
           )}
@@ -54,11 +74,10 @@ const Navbar = ({
 
           <button
             className="navbar-host-button"
-            onClick={() => window.location.href = "/host"}
+            onClick={() => navigate("/host")}
           >
             Host an Event
           </button>
-
 
           <span className="navbar-icon">👤</span>
         </div>
