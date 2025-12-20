@@ -6,6 +6,7 @@ import HostEvent from "./pages/HostEvent";
 import Checkout from "./pages/Checkout.jsx";
 import Ticket from "./pages/Ticket";
 import MyBookings from "./pages/MyBookings"; // ✅ ADDED
+import ContactUs from "./pages/ContactUs";
 
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFailed />} />
         <Route path="/ticket/:orderId" element={<Ticket />} />
+        <Route path="/contact" element={<ContactUs />} />
 
         {/* ✅ MY BOOKINGS ROUTE */}
         <Route path="/my-bookings" element={<MyBookings />} />

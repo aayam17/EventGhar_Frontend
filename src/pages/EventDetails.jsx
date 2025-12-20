@@ -50,8 +50,6 @@ const EventDetails = () => {
         <div className="event-left-column">
           <img src={eventImage} alt={event.title} className="event-poster" />
 
-          <div className="event-mini-title">🎵 {event.title}</div>
-
           <button className="organizer-btn">
             {event.organizer?.name || "ORGANIZER"}
           </button>

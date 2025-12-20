@@ -11,11 +11,10 @@ const EventList = ({ onEventChange }) => {
       setLoading(true);
       const res = await fetch("http://127.0.0.1:5001/api/events");
       if (!res.ok) {
-  const text = await res.text();
-  throw new Error(text);
-}
-const data = await res.json();
-
+        const text = await res.text();
+        throw new Error(text);
+      }
+      const data = await res.json();
       setEvents(data);
       if (onEventChange) onEventChange(data.length);
     } catch (err) {
@@ -26,7 +25,9 @@ const data = await res.json();
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this event?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this event?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -34,7 +35,7 @@ const data = await res.json();
         method: "DELETE",
       });
       fetchEvents();
-    } catch (err) {
+    } catch {
       alert("Failed to delete event");
     }
   };
@@ -45,7 +46,8 @@ const data = await res.json();
 
   if (loading) return <p className="loading-message">Loading events...</p>;
   if (error) return <p className="error-message">{error}</p>;
-  if (events.length === 0) return <p className="empty-message">No events added yet.</p>;
+  if (events.length === 0)
+    return <p className="empty-message">No events added yet.</p>;
 
   return (
     <div className="analytics-card event-list-card">
@@ -79,7 +81,6 @@ const data = await res.json();
                 <td>Rs {Number(event.price).toLocaleString()}</td>
                 <td>{event.packages || "Standard"}</td>
                 <td>
-                  <button className="action-btn edit-btn">Edit</button>
                   <button
                     className="action-btn delete-btn"
                     onClick={() => handleDelete(event._id)}
@@ -90,7 +91,6 @@ const data = await res.json();
               </tr>
             ))}
           </tbody>
-
         </table>
       </div>
     </div>

@@ -1,17 +1,43 @@
 /* =====================================================
-   GLOBAL VARIABLES
+   GLOBAL DESIGN TOKENS (PREMIUM SYSTEM)
 ===================================================== */
 :root {
+  /* Brand */
   --primary-red: #e74c3c;
-  --dark-bg: #222;
-  --light-bg: #f7f7f7;
-  --text-color: #333;
-  --nav-bg: #fff;
+  --primary-red-dark: #cf3f31;
+
+  /* Backgrounds */
+  --dark-bg: #1f1f1f;
+  --light-bg: #f7f8fa;
+  --nav-bg: #ffffff;
+
+  /* Text */
+  --text-color: #2c2c2c;
+  --muted-text: #777;
+
+  /* Layout */
   --max-width: 1400px;
+
+  /* Radius */
+  --radius-xs: 8px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  /* Shadows (layered = premium) */
+  --shadow-soft:
+    0 4px 12px rgba(0,0,0,0.08);
+  --shadow-md:
+    0 8px 24px rgba(0,0,0,0.14);
+  --shadow-lg:
+    0 20px 45px rgba(0,0,0,0.18);
+
+  /* Motion */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* =====================================================
-   BASE
+   BASE RESET
 ===================================================== */
 * {
   box-sizing: border-box;
@@ -20,25 +46,23 @@
 body {
   margin: 0;
   background-color: var(--light-bg);
+  color: var(--text-color);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
 .app-container {
-  font-family: Arial, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* =====================================================
-   MAIN CONTENT
-===================================================== */
 .main-content {
   width: 100%;
   flex: 1;
 }
 
 /* =====================================================
-   HERO SECTION
+   HERO SECTION (PREMIUM)
 ===================================================== */
 .hero-section-wrapper {
   position: relative;
@@ -58,7 +82,11 @@ body {
 .hero-container {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.35)
+  );
   display: flex;
   justify-content: center;
   align-items: center;
@@ -69,19 +97,19 @@ body {
   max-width: var(--max-width);
   padding: 0 40px;
   text-align: center;
-  color: white;
+  color: #fff;
 }
 
 .hero-title {
-  font-size: 48px;
+  font-size: 52px;
   font-weight: 900;
+  letter-spacing: -0.6px;
   margin-bottom: 12px;
 }
 
 .hero-package-detail {
-  font-size: 16px;
-  margin-bottom: 10px;
-  opacity: 0.9;
+  font-size: 17px;
+  opacity: 0.95;
 }
 
 .hero-info-text-location {
@@ -90,7 +118,9 @@ body {
   margin-bottom: 30px;
 }
 
-/* TIMER */
+/* =====================================================
+   HERO TIMER (GLASS EFFECT)
+===================================================== */
 .hero-timer-row {
   display: flex;
   justify-content: center;
@@ -100,10 +130,12 @@ body {
 
 .hero-timer-box {
   min-width: 90px;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid var(--primary-red);
-  padding: 12px;
-  border-radius: 8px;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 14px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
 }
 
 .hero-timer-value {
@@ -117,7 +149,9 @@ body {
   color: #ddd;
 }
 
-/* HERO BUTTONS */
+/* =====================================================
+   HERO BUTTONS
+===================================================== */
 .hero-button-row {
   display: flex;
   justify-content: center;
@@ -127,30 +161,47 @@ body {
 .hero-view-details-button {
   background: transparent;
   border: 2px solid #fff;
-  color: white;
-  padding: 12px 26px;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 999px;
   cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.hero-view-details-button:hover {
+  background: rgba(255,255,255,0.12);
 }
 
 .hero-buy-ticket-button {
-  background-color: var(--primary-red);
+  background: linear-gradient(
+    135deg,
+    var(--primary-red),
+    var(--primary-red-dark)
+  );
   border: none;
-  color: white;
-  padding: 12px 26px;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.hero-buy-ticket-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* =====================================================
    TRENDING EVENTS
 ===================================================== */
 .trending-events-section {
-  width: 100%;
-  padding: 50px 0;
+  padding: 60px 0;
 }
 
 .trending-header {
   max-width: var(--max-width);
-  margin: 0 auto 28px;
+  margin: 0 auto 30px;
   padding: 0 32px;
   display: flex;
   justify-content: space-between;
@@ -158,25 +209,25 @@ body {
 }
 
 .trending-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
 }
 
-/* PRICE FILTER */
+/* =====================================================
+   PRICE FILTER (MODERN)
+===================================================== */
 .price-filter {
   display: flex;
   align-items: center;
   gap: 14px;
   background: #fff;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid #eee;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 12px 18px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 .price-label {
   font-size: 14px;
-  color: #444;
 }
 
 .price-slider {
@@ -184,34 +235,35 @@ body {
   accent-color: var(--primary-red);
 }
 
-/* GRID */
+/* =====================================================
+   EVENTS GRID
+===================================================== */
 .events-grid {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 32px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 26px;
+  gap: 28px;
 }
 
 /* =====================================================
-   EVENT CARD
+   EVENT CARD (PREMIUM)
 ===================================================== */
 .event-card-container {
-  background: white;
-  border-radius: 14px;
+  background: #fff;
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  transition: all 0.25s ease;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s var(--ease);
 }
 
 .event-card-container:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
 }
 
 .image-wrapper {
-  width: 100%;
   aspect-ratio: 16 / 9;
   background: #111;
 }
@@ -223,13 +275,12 @@ body {
 }
 
 .card-details {
-  padding: 14px 16px;
+  padding: 16px 18px;
 }
 
 .event-card-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 6px;
 }
 
 .date-price-row {
@@ -241,18 +292,29 @@ body {
 
 .package-info {
   font-size: 12px;
-  color: #777;
-  margin-bottom: 10px;
+  color: var(--muted-text);
 }
 
+/* BUY BUTTON */
 .buy-button {
   width: 100%;
-  padding: 10px;
-  background: var(--primary-red);
-  color: white;
+  padding: 12px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-red),
+    var(--primary-red-dark)
+  );
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.buy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 /* =====================================================
@@ -262,7 +324,6 @@ body {
   width: 100%;
   height: 300px;
   background: var(--dark-bg);
-  border-top: 5px solid var(--primary-red);
 }
 
 .footer-image {
@@ -278,12 +339,16 @@ body {
   position: fixed;
   bottom: 25px;
   right: 25px;
-  background: #3498db;
+  background: linear-gradient(135deg, #3498db, #2980b9);
   color: white;
   border: none;
   padding: 14px 22px;
   border-radius: 999px;
   cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-lg);
+  transition: all 0.25s var(--ease);
+}
+
+.admin-switch-btn:hover {
+  transform: translateY(-2px);
 }

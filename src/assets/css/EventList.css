@@ -1,107 +1,221 @@
-/* --- EventList.css --- */
+/* ======================================================
+   EVENT LIST – COLORFUL PREMIUM ADMIN
+====================================================== */
 
-/* Utility messages */
-.loading-message, .error-message, .empty-message {
-    padding: 20px;
-    text-align: center;
-    font-size: 16px;
-    color: var(--admin-text-light); /* Requires CSS variable from main dashboard */
-}
-.error-message {
-    color: var(--admin-primary-red); /* Requires CSS variable from main dashboard */
-    font-weight: 600;
-}
+/* ================= UTILITY STATES ================= */
+
+.loading-message,
+.error-message,
 .empty-message {
-    color: #3498db;
-    font-style: italic;
+  padding: 28px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--admin-text-light);
+
+  background: linear-gradient(#fafafa, #f5f5f5);
+  border-radius: 18px;
+  border: 1px dashed var(--admin-border-color);
 }
 
-/* --- Event List Table Styles --- */
-/* Note: The .analytics-card styles should be in your main dashboard CSS */
+.error-message {
+  color: var(--admin-primary-red);
+  background: linear-gradient(#fff5f5, #fff1f1);
+  border-style: solid;
+}
+
+.empty-message {
+  color: #3498db;
+  font-style: italic;
+}
+
+/* ======================================================
+   CARD WRAPPER – COLOR ACCENT
+====================================================== */
 
 .event-list-card {
-    /* Optional: make the list wider on desktop */
-    grid-column: 1 / -1; 
+  position: relative;
+  grid-column: 1 / -1;
+
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border-radius: 22px;
+  padding: 28px;
+
+  border: 1px solid rgba(0,0,0,0.06);
+
+  box-shadow:
+    0 28px 60px rgba(0,0,0,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  overflow: hidden;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
+
+/* 🌈 Gradient accent strip (same as orders) */
+.event-list-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    #3b82f6,
+    #22c55e,
+    #f59e0b
+  );
+  border-radius: 22px 22px 0 0;
+}
+
+/* Hover lift */
+.event-list-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 38px 80px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+}
+
+/* ======================================================
+   TABLE CONTAINER
+====================================================== */
 
 .event-table-container {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
+
+/* ======================================================
+   TABLE
+====================================================== */
 
 .event-table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 800px; /* Ensures table is readable */
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 820px;
 }
 
-.event-table-container th, .event-table-container td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--admin-border-color); /* Requires CSS variable */
-    font-size: 14px;
-    color: var(--admin-text-light); /* Requires CSS variable */
-}
+/* ======================================================
+   HEADERS
+====================================================== */
 
 .event-table-container th {
-    font-weight: 600;
-    color: var(--admin-text-dark); /* Requires CSS variable */
-    background-color: var(--admin-bg-light); /* Requires CSS variable */
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
+  padding: 15px 16px;
+  text-align: left;
+
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+
+  color: var(--admin-text-dark);
+  background: var(--admin-bg-light);
+
+  border-bottom: 1px solid var(--admin-border-color);
+}
+
+/* ======================================================
+   CELLS
+====================================================== */
+
+.event-table-container td {
+  padding: 18px 16px;
+  font-size: 14px;
+  color: var(--admin-text-light);
+  border-bottom: 1px solid var(--admin-border-color);
+  vertical-align: middle;
+}
+
+/* ======================================================
+   ROW INTERACTION
+====================================================== */
+
+.event-table-container tbody tr {
+  transition:
+    background 0.2s ease,
+    transform 0.15s ease;
 }
 
 .event-table-container tbody tr:hover {
-    background-color: #fafafa;
+  background: rgba(0,0,0,0.025);
+  transform: translateY(-1px);
 }
+
+/* ======================================================
+   EVENT TITLE
+====================================================== */
 
 .event-title-col {
-    font-weight: 600;
-    color: var(--admin-text-dark); /* Requires CSS variable */
+  font-weight: 800;
+  color: var(--admin-text-dark);
+  letter-spacing: -0.25px;
 }
 
-/* Status Badges */
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-block;
+/* ======================================================
+   ACTION COLUMN
+====================================================== */
+
+.event-table-container td:last-child {
+  white-space: nowrap;
 }
 
-.status-live {
-    background-color: #e6f7ee;
-    color: #2ecc71;
-    border: 1px solid #2ecc71;
-}
-/* Placeholder statuses */
-.status-draft {
-    background-color: #fff0e6;
-    color: #ffb700;
-    border: 1px solid #ffb700;
+/* ======================================================
+   FEATURED-STYLE DELETE BUTTON
+====================================================== */
+
+.featured-btn {
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.35px;
+
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-/* Action Buttons */
-.action-btn {
-    padding: 6px 10px;
-    margin-right: 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: opacity 0.2s;
-    border: none;
+/* Delete – same style as Featured & Orders */
+.featured-btn.delete {
+  background: linear-gradient(#fff, #fff);
+  color: #dc2626;
+  border: 1px solid #fecaca;
 }
-.action-btn:hover {
-    opacity: 0.8;
+
+.featured-btn.delete:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(239,68,68,0.35);
 }
-.edit-btn {
-    background-color: #3498db;
-    color: white;
+
+/* ======================================================
+   IMAGE STYLE
+====================================================== */
+
+.event-table-container img {
+  width: 80px;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.18);
 }
-.delete-btn {
-    background-color: #e74c3c;
-    color: white;
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 768px) {
+  .event-table-container table {
+    min-width: 700px;
+  }
+
+  .featured-btn {
+    padding: 6px 14px;
+  }
 }

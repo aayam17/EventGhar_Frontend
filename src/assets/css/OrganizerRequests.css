@@ -1,107 +1,226 @@
-/* ================= ORGANIZER REQUEST CARDS ================= */
+/* =====================================================
+   ORGANIZER REQUEST CARD – COLORFUL PREMIUM ADMIN
+===================================================== */
 
 .organizer-card {
+  position: relative;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 20px;
-  border-radius: 12px;
-  background: #fff;
-  border: 1px solid #eee;
-  margin-bottom: 14px;
-  transition: box-shadow 0.25s ease;
+  gap: 24px;
+
+  padding: 24px 28px;
+  margin-bottom: 18px;
+
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border-radius: 18px;
+
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  overflow: hidden;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+/* 🌈 Accent strip */
+.organizer-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    #3b82f6,
+    #22c55e,
+    #f59e0b
+  );
+  border-radius: 18px 18px 0 0;
 }
 
 .organizer-card:hover {
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transform: translateY(-3px);
+  box-shadow:
+    0 32px 70px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.95);
 }
 
+/* ================= INFO ================= */
+
 .organizer-info h4 {
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   font-size: 17px;
-  font-weight: 700;
-  color: #2b2b2b;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.2px;
 }
 
 .organizer-info p {
   margin: 0;
   font-size: 13px;
-  color: #777;
+  font-weight: 600;
+  color: #6b7280;
 }
 
-/* Status badge */
+/* ================= STATUS BADGES ================= */
+
 .status-badge {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 4px 10px;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-top: 12px;
+  padding: 6px 16px;
+
+  border-radius: 999px;
+
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 900;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
 }
 
+/* Pending */
 .status-badge.pending {
-  background: #fff4e5;
-  color: #ff9800;
+  background: linear-gradient(#fff7ed, #ffedd5);
+  color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.35);
 }
 
+/* Approved */
 .status-badge.approved {
-  background: #e8f7ee;
-  color: #2ecc71;
+  background: linear-gradient(#ecfdf5, #d1fae5);
+  color: #22c55e;
+  border: 1px solid rgba(34,197,94,0.35);
 }
 
+/* Rejected */
 .status-badge.rejected {
-  background: #fdecea;
-  color: #e74c3c;
+  background: linear-gradient(#fef2f2, #fee2e2);
+  color: #ef4444;
+  border: 1px solid rgba(239,68,68,0.35);
 }
 
-/* Action buttons */
+/* ================= ACTION BUTTONS ================= */
+
 .organizer-actions {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 
+/* Base button */
 .btn {
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: 9px 18px;
+  border-radius: 999px;
+
   border: none;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.45px;
+
   cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.2s ease;
 }
 
+/* View */
 .btn.view {
-  background: #3498db;
-  color: #fff;
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(59,130,246,0.35);
 }
 
+.btn.view:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(59,130,246,0.45);
+}
+
+/* Approve */
 .btn.approve {
-  background: #2ecc71;
-  color: #fff;
+  background: linear-gradient(135deg, #34d399, #22c55e);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(34,197,94,0.35);
 }
 
+.btn.approve:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(34,197,94,0.45);
+}
+
+/* Reject */
 .btn.reject {
-  background: #e74c3c;
-  color: #fff;
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(239,68,68,0.35);
 }
 
-/* ================= DETAILS MODAL ================= */
+.btn.reject:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(239,68,68,0.45);
+}
+
+/* =====================================================
+   DETAILS MODAL – PREMIUM ADMIN
+===================================================== */
 
 .details-wrapper h3 {
-  margin-bottom: 18px;
+  margin-bottom: 24px;
+  font-size: 20px;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -0.3px;
 }
 
+/* Grid */
 .details-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  font-size: 14px;
-  margin-bottom: 18px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
+/* Detail boxes */
 .details-box {
-  background: #f8f9fb;
-  padding: 14px;
-  border-radius: 10px;
+  background: linear-gradient(180deg, #f9fafb, #f3f4f6);
+  padding: 18px 20px;
+  border-radius: 14px;
+
   font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+  .organizer-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .organizer-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
 }

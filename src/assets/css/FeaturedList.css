@@ -1,25 +1,64 @@
 /* ======================================================
-   FEATURED EVENTS PANEL – PREMIUM
+   FEATURED EVENTS PANEL – COLORFUL PREMIUM ADMIN
 ====================================================== */
 
 .featured-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 28px 26px;
-  border: 1px solid #ececec;
+  position: relative;
+
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #fafafa
+  );
+  border-radius: 22px;
+  padding: 32px 28px;
+
+  border: 1px solid rgba(0,0,0,0.06);
+
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.06),
-    0 2px 6px rgba(0, 0, 0, 0.04);
+    0 28px 60px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  overflow: hidden;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
-/* Title */
+/* 🌈 Colorful accent strip */
+.featured-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    #3b82f6,
+    #22c55e,
+    #f59e0b
+  );
+  border-radius: 22px 22px 0 0;
+}
+
+/* Hover lift */
+.featured-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 40px 90px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+}
+
+/* ======================================================
+   TITLE
+====================================================== */
+
 .featured-card .card-title {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 900;
   color: #111;
   text-align: center;
-  margin-bottom: 14px;
-  letter-spacing: -0.3px;
+  margin-bottom: 18px;
+  letter-spacing: -0.4px;
 }
 
 /* Divider */
@@ -28,42 +67,55 @@
   background: linear-gradient(
     to right,
     transparent,
-    #e6e6e6,
+    rgba(0,0,0,0.18),
     transparent
   );
-  margin-bottom: 26px;
+  margin-bottom: 30px;
 }
 
 /* ======================================================
-   EMPTY STATE – FRIENDLY
+   EMPTY STATE – POLISHED
 ====================================================== */
 
 .featured-empty {
-  padding: 50px 24px;
+  padding: 60px 26px;
   text-align: center;
+
   font-size: 15px;
-  color: #777;
-  background: linear-gradient(#fafafa, #f7f7f7);
-  border-radius: 14px;
-  border: 1px dashed #ddd;
+  font-weight: 600;
+  color: #6b7280;
+
+  background: linear-gradient(
+    180deg,
+    #fafafa,
+    #f5f5f5
+  );
+  border-radius: 18px;
+
+  border: 1px dashed rgba(0,0,0,0.15);
 }
 
 /* ======================================================
-   FEATURED EVENT ROW – CLEAN & CLEAR
+   FEATURED EVENT ROW – PREMIUM
 ====================================================== */
 
 .featured-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 10px;
-  border-bottom: 1px solid #f1f1f1;
-  gap: 22px;
-  transition: background-color 0.25s ease;
+  gap: 24px;
+
+  padding: 20px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+
+  transition:
+    background 0.25s ease,
+    transform 0.15s ease;
 }
 
 .featured-row:hover {
-  background-color: #fafafa;
+  background: rgba(0,0,0,0.03);
+  transform: translateY(-1px);
 }
 
 .featured-row:last-child {
@@ -82,21 +134,22 @@
 /* Event title */
 .featured-title {
   font-size: 16px;
-  font-weight: 700;
-  color: #111 !important;
-  line-height: 1.35;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.45;
+  letter-spacing: -0.25px;
   word-break: break-word;
-  letter-spacing: -0.2px;
 }
 
 /* Date */
 .featured-date {
   font-size: 13px;
-  color: #777;
+  font-weight: 600;
+  color: #6b7280;
 }
 
 /* ======================================================
-   ACTION BUTTONS – ADMIN GRADE
+   ACTION BUTTONS – ADMIN GRADE (COLORFUL)
 ====================================================== */
 
 .featured-actions {
@@ -107,46 +160,65 @@
 
 /* Base button */
 .featured-btn {
-  padding: 7px 16px;
+  padding: 8px 18px;
   font-size: 12px;
-  font-weight: 700;
-  border-radius: 9px;
+  font-weight: 900;
+  letter-spacing: 0.45px;
+
+  border-radius: 999px;
   border: none;
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
   white-space: nowrap;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-/* Enable / Disable */
+/* Toggle (Enable / Disable) */
 .featured-btn.toggle {
-  background: #f1f5f9;
+  background: linear-gradient(
+    135deg,
+    #e0ecff,
+    #f1f5ff
+  );
   color: #2563eb;
-  border: 1px solid #dbeafe;
+  border: 1px solid rgba(37,99,235,0.25);
 }
 
 .featured-btn.toggle:hover {
-  background: #2563eb;
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8
+  );
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 10px 22px rgba(37,99,235,0.35);
 }
 
-/* Delete */
+/* Delete – same as Event List & Orders */
 .featured-btn.delete {
-  background: #fff5f5;
+  background: linear-gradient(
+    135deg,
+    #fff1f2,
+    #ffe4e6
+  );
   color: #dc2626;
-  border: 1px solid #fecaca;
+  border: 1px solid rgba(220,38,38,0.25);
 }
 
 .featured-btn.delete:hover {
-  background: #dc2626;
+  background: linear-gradient(
+    135deg,
+    #dc2626,
+    #b91c1c
+  );
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 10px 22px rgba(220,38,38,0.35);
 }
 
 /* ======================================================
@@ -157,11 +229,12 @@
   .featured-row {
     flex-direction: column;
     align-items: flex-start;
-    padding: 16px 6px;
+    padding: 18px 10px;
   }
 
   .featured-actions {
     justify-content: flex-end;
-    margin-top: 10px;
+    width: 100%;
+    margin-top: 12px;
   }
 }

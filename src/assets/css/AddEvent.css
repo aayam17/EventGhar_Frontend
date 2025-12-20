@@ -1,84 +1,94 @@
-/* ---------------- ADD EVENT MODAL FORM ---------------- */
+/* ======================================================
+   ADD EVENT MODAL – PREMIUM & FIT SCREEN
+====================================================== */
 
 .add-event-wrapper {
-  padding: 30px 32px;
-  max-width: 650px;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  font-family: 'Segoe UI', sans-serif;
+  max-width: 720px;
+  width: 100%;
+
+  padding: 28px 32px;
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.06);
+
+  box-shadow:
+    0 30px 70px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* Title */
 .add-event-title {
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  color: #1c1c1c;
+  font-size: 22px;
+  font-weight: 800;
   text-align: center;
+  margin-bottom: 22px;
+  color: #111;
 }
 
-/* Grid layout */
+/* Grid */
 .add-event-form {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 18px;
 }
 
-/* Full width fields */
 .add-event-form .full {
   grid-column: span 2;
 }
 
-/* Input fields */
+/* Inputs */
 .input-box {
-  width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  background-color: #f9f9f9;
-  color: #1c1c1c; /* Ensures typed text is visible */
-  transition: all 0.25s ease;
-}
+  border: 1px solid #ddd;
 
-.input-box::placeholder {
-  color: #aaa; /* Subtle placeholder color */
+  font-size: 14px;
+  background: #ffffff;
+
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
 }
 
 .input-box:focus {
   outline: none;
   border-color: #ff6b6b;
-  background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.15);
-  color: #1c1c1c; /* Ensure text remains visible on focus */
+  box-shadow: 0 0 0 4px rgba(255,107,107,0.18);
 }
 
-/* Submit button */
+/* Submit */
 .add-event-btn {
   grid-column: span 2;
-  margin-top: 12px;
+  margin-top: 14px;
+
+  padding: 16px;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
   background: linear-gradient(135deg, #ff6b6b, #ff4757);
   color: #fff;
-  border: none;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+
+  box-shadow: 0 14px 30px rgba(255,107,107,0.45);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .add-event-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(255, 107, 107, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px rgba(255,107,107,0.55);
 }
 
-/* Modal close button */
+/* Close button */
 .modal-close-btn {
-  font-size: 28px;
-  color: #999;
-  transition: color 0.25s ease;
+  font-size: 26px;
+  color: #9ca3af;
 }
 
 .modal-close-btn:hover {

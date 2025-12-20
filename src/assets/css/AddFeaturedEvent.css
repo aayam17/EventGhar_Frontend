@@ -1,97 +1,71 @@
-/* ===============================
-   ADD FEATURED EVENT FORM
-================================ */
+/* ======================================================
+   ADD FEATURED EVENT – PREMIUM FORM
+====================================================== */
 
 .add-featured-form {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  padding: 30px 32px;
+
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.06);
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: #ffffff;
-  padding: 26px;
-  border-radius: 14px;
-  border: 1px solid #eee;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Title */
 .add-featured-form h2 {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800;
   color: #111;
-  margin-bottom: 6px;
+  letter-spacing: -0.3px;
 }
 
 /* Inputs */
 .add-featured-form input {
-  width: 100%;
-  padding: 11px 14px;
-  font-size: 14px;
-  color: #111;
-  border-radius: 10px;
+  padding: 13px 16px;
+  border-radius: 12px;
   border: 1px solid #ddd;
-  background: #ffffff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
+  font-size: 14px;
 
-.add-featured-form input::placeholder {
-  color: #9aa0a6;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
 }
 
 .add-featured-form input:focus {
   outline: none;
   border-color: #e74c3c;
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.12);
+  box-shadow: 0 0 0 4px rgba(231,76,60,0.15);
 }
 
 /* File input */
 .add-featured-form input[type="file"] {
-  padding: 9px;
-  font-size: 13px;
+  background: #f9fafb;
   cursor: pointer;
-  background-color: #f9f9f9;
 }
 
-/* Submit button */
+/* Button */
 .add-featured-form button {
-  margin-top: 12px;
-  padding: 13px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+
   font-size: 14px;
-  font-weight: 700;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  color: #ffffff;
+  font-weight: 900;
+  letter-spacing: 0.4px;
+
   background: linear-gradient(135deg, #e74c3c, #ff6b6b);
-  box-shadow: 0 10px 22px rgba(231, 76, 60, 0.35);
+  color: #fff;
+
+  box-shadow: 0 12px 26px rgba(231,76,60,0.4);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .add-featured-form button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(231, 76, 60, 0.45);
-}
-
-.add-featured-form button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-/* ===============================
-   RESPONSIVE
-================================ */
-
-@media (max-width: 768px) {
-  .add-featured-form {
-    padding: 22px 20px;
-  }
-
-  .add-featured-form h2 {
-    font-size: 18px;
-  }
-
-  .add-featured-form button {
-    font-size: 13px;
-    padding: 11px;
-  }
+  box-shadow: 0 16px 34px rgba(231,76,60,0.5);
 }

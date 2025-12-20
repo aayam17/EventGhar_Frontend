@@ -1,22 +1,23 @@
-
 /* ===============================
    PAGE
 ================================ */
 
 .page-loading {
-  padding: 60px;
+  padding: 90px;
   text-align: center;
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #374151;
 }
 
 .event-details-page {
-  max-width: 1300px;
-  margin: 40px auto;
-  padding: 0 30px;
+  max-width: 1400px;
+  margin: 56px auto;
+  padding: 0 40px;
   display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 40px;
-  font-family: Arial, sans-serif;
+  grid-template-columns: 460px 1fr;
+  gap: 56px;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 /* ===============================
@@ -26,56 +27,68 @@
 .event-left-column {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 22px;
 }
 
+/* Poster */
 .event-poster {
   width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 22px;
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
-/* EVENT MINI TAG */
+/* Mini tag */
 .event-mini-title {
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  background: #f3f3f3;
-  padding: 8px 14px;
-  border-radius: 20px;
+  font-weight: 800;
+  color: #111827;
+  background: linear-gradient(135deg, #f9fafb, #eef2f7);
+  padding: 10px 20px;
+  border-radius: 999px;
   width: fit-content;
+  letter-spacing: 0.3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.1),
+    0 6px 16px rgba(0,0,0,0.12);
 }
 
-/* ORGANIZER BUTTON */
+/* Organizer button */
 .organizer-btn {
-  background-color: #2f3e8f;
+  background: linear-gradient(135deg, #2f3e8f, #1f2f75);
   color: #fff;
-  font-weight: 800;
-  padding: 14px;
-  border-radius: 8px;
+  font-weight: 900;
+  padding: 18px;
+  border-radius: 18px;
   border: none;
   cursor: pointer;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 16px 38px rgba(47,62,143,0.45);
 }
 
 .organizer-btn:hover {
-  background-color: #26357a;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(47, 62, 143, 0.3);
+  transform: translateY(-3px);
+  box-shadow:
+    0 24px 55px rgba(47,62,143,0.55);
 }
 
-/* MAP PLACEHOLDER */
+/* Map */
 .map-placeholder {
-  height: 260px;
-  border-radius: 12px;
-  background: #f2f2f2;
-  color: #777;
+  height: 300px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+  color: #374151;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  font-weight: 800;
+  font-size: 15px;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.08);
 }
 
 /* ===============================
@@ -83,128 +96,155 @@
 ================================ */
 
 .event-main-title {
-  font-size: 26px;
-  font-weight: 700;
-  margin-bottom: 18px;
+  font-size: 36px;
+  font-weight: 900;
+  margin-bottom: 26px;
+  color: #0f172a;
+  letter-spacing: -0.6px;
+  line-height: 1.25;
 }
 
+/* Tabs */
 .event-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border: 2px solid #000;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+  background: linear-gradient(#f8fafc, #eef2f7);
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.12);
 }
 
 .tab {
-  padding: 14px;
-  font-weight: 700;
-  background: #fff;
+  padding: 20px;
+  font-weight: 900;
+  font-size: 15px;
+  background: transparent;
   border: none;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.25s ease;
+  color: #374151;
 }
 
 .tab.active {
-  background: #f4f4f4;
+  background: #ffffff;
+  color: #2f3e8f;
+  box-shadow: inset 0 -3px 0 #2f3e8f;
 }
 
+/* Content box */
 .event-content-box {
-  border: 2px solid #000;
-  border-top: none;
-  padding: 32px;
-  min-height: 420px;
+  padding: 40px;
+  min-height: 460px;
+  background: #ffffff;
+  border-radius: 0 0 24px 24px;
+  box-shadow:
+    0 40px 90px rgba(0,0,0,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
-/* DETAILS */
+/* Details */
 .details-title {
-  font-size: 22px;
-  margin-bottom: 12px;
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 18px;
+  color: #0f172a;
 }
 
 .details-line {
-  margin: 6px 0;
-  font-size: 15px;
+  margin: 12px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .event-description {
-  margin-top: 20px;
-  line-height: 1.7;
-  font-size: 15px;
-  color: #333;
+  margin-top: 28px;
+  line-height: 1.9;
+  font-size: 17px;
+  color: #374151;
 }
 
 /* ===============================
-   TICKETS (CLEAN & SPACED)
+   TICKETS — LUXURY CARDS
 ================================ */
 
 .ticket-row {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  padding: 20px 26px;
-  margin-bottom: 22px;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  background: #ffffff;
+  padding: 26px 32px;
+  margin-bottom: 26px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow:
+    0 22px 48px rgba(0,0,0,0.14);
 }
 
-/* Ticket type */
+/* Ticket name */
 .ticket-type {
-  font-size: 16px;
-  font-weight: 700;
-  color: #222;
+  font-size: 20px;
+  font-weight: 900;
+  color: #0f172a;
 }
 
-/* Ticket price */
+/* Price */
 .ticket-price {
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
-  margin-right: 28px; /* FIX: SPACE FROM ADD BUTTON */
+  font-size: 17px;
+  font-weight: 800;
+  color: #1f2937;
+  margin-right: 32px;
   white-space: nowrap;
 }
 
-/* ADD button */
+/* Add button */
 .ticket-add-btn {
-  background-color: #2f3e8f;
+  background: linear-gradient(135deg, #2f3e8f, #1f2f75);
   color: #fff;
-  padding: 10px 28px;
-  border-radius: 22px;
+  padding: 14px 40px;
+  border-radius: 999px;
   border: none;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 900;
   cursor: pointer;
-  transition: all 0.25s ease;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 12px 28px rgba(47,62,143,0.45);
 }
 
 .ticket-add-btn:hover {
-  background-color: #26357a;
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(47, 62, 143, 0.25);
+  transform: translateY(-3px);
+  box-shadow:
+    0 20px 46px rgba(47,62,143,0.6);
 }
 
 /* ===============================
-   NEXT BUTTON
+   NEXT BUTTON — PRIMARY CTA
 ================================ */
 
 .next-btn {
   display: block;
-  margin: 46px auto 0;
-  padding: 15px 64px;
-  background-color: #6aa84f;
+  margin: 64px auto 0;
+  padding: 20px 86px;
+  background: linear-gradient(135deg, #6aa84f, #5e9c44);
   color: #fff;
-  font-weight: 800;
-  font-size: 15px;
-  border-radius: 30px;
+  font-weight: 900;
+  font-size: 17px;
+  border-radius: 999px;
   border: none;
   cursor: pointer;
-  letter-spacing: 0.4px;
-  transition: all 0.25s ease;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease;
+  box-shadow:
+    0 22px 50px rgba(106,168,79,0.55);
 }
 
 .next-btn:hover {
-  background-color: #5c9645;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(106, 168, 79, 0.35);
+  transform: translateY(-4px);
+  box-shadow:
+    0 30px 70px rgba(106,168,79,0.7);
 }
 
 /* ===============================
@@ -215,12 +255,22 @@
   .event-details-page {
     grid-template-columns: 1fr;
   }
+
+  .event-main-title {
+    font-size: 30px;
+  }
+
+  .ticket-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    text-align: center;
+  }
 }
 
 .map-container {
-  margin-top: 16px;
-  width: 100%;
+  margin-top: 20px;
+  border-radius: 22px;
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.22);
 }
