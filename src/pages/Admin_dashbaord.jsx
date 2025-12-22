@@ -86,8 +86,27 @@ const AdminHeader = () => (
       <img src={EventGharLogo} alt="Event Ghar Logo" className="admin-logo" />
       <span className="header-title-text">Analytics</span>
     </div>
+
+    <button
+      style={{
+        marginLeft: "auto",
+        background: "none",
+        border: "none",
+        fontWeight: 700,
+        cursor: "pointer",
+        color: "#e74c3c",
+      }}
+      onClick={() => {
+        localStorage.removeItem("eventghar_admin_token");
+        localStorage.removeItem("eventghar_admin");
+        window.location.href = "/admin/login";
+      }}
+    >
+      Logout
+    </button>
   </header>
 );
+
 
 /* ------------------ METRIC CARD ------------------ */
 const MetricCard = ({ icon, label, value, color }) => (

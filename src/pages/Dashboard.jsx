@@ -5,7 +5,6 @@ import Navbar from "../components/Navbar";
 
 /* ===================== ASSETS ===================== */
 import EventGharLogo from "../assets/logo.png";
-import FooterImage from "../assets/footer.png";
 
 /* =====================================================
    COUNTDOWN HELPER
@@ -21,7 +20,6 @@ const getCountdownTime = (targetDate) => {
     seconds: Math.floor((diff / 1000) % 60),
   };
 };
-
 
 /* =====================================================
    FEATURED EVENTS SLIDER
@@ -131,7 +129,6 @@ const EventCard = ({ event }) => {
           Packages: {event.packages || "Standard"}
         </p>
 
-        {/* ✅ FIXED BUY BUTTON */}
         <button
           className="buy-button"
           onClick={() => navigate(`/events/${event._id}`)}
@@ -142,7 +139,6 @@ const EventCard = ({ event }) => {
     </div>
   );
 };
-
 
 /* =====================================================
    TRENDING EVENTS
@@ -206,15 +202,6 @@ const TrendingEvents = React.forwardRef(
 );
 
 /* =====================================================
-   FOOTER
-===================================================== */
-const Footer = () => (
-  <footer className="footer-image-container">
-    <img src={FooterImage} alt="Footer" className="footer-image" />
-  </footer>
-);
-
-/* =====================================================
    ADMIN BUTTON
 ===================================================== */
 const AdminSwitchButton = () => (
@@ -229,7 +216,6 @@ const AdminSwitchButton = () => (
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100000]);
-
   const trendingRef = useRef(null);
 
   const handleEventsClick = () => {
@@ -258,7 +244,6 @@ const Dashboard = () => {
         />
       </main>
 
-      <Footer />
       <AdminSwitchButton />
     </div>
   );
