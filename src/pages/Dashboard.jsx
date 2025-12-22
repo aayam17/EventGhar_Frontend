@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../assets/css/Dashboard.css";
 import Navbar from "../components/Navbar";
 
-/* ===================== ASSETS ===================== */
-import EventGharLogo from "../assets/logo.png";
-
 /* =====================================================
    COUNTDOWN HELPER
 ===================================================== */
@@ -40,38 +37,28 @@ const FeaturedEventsSlider = () => {
     if (!events.length) return;
 
     const updateTimer = () =>
-      setTimeLeft(
-        getCountdownTime(events[currentIndex].eventDateTime)
-      );
+      setTimeLeft(getCountdownTime(events[currentIndex].eventDateTime));
 
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
-
     return () => clearInterval(interval);
   }, [events, currentIndex]);
 
   useEffect(() => {
     if (events.length <= 1) return;
-
-    const autoSlide = setInterval(() => {
-      setCurrentIndex((i) => (i + 1) % events.length);
-    }, 6000);
-
+    const autoSlide = setInterval(
+      () => setCurrentIndex((i) => (i + 1) % events.length),
+      6000
+    );
     return () => clearInterval(autoSlide);
   }, [events]);
 
   if (!events.length || !timeLeft) return null;
-
   const event = events[currentIndex];
 
   return (
     <section className="hero-section-wrapper">
-      <img
-        src={event.imageSrc}
-        alt={event.title}
-        className="hero-image-overlay-img"
-      />
-
+      <img src={event.imageSrc} alt={event.title} className="hero-image-overlay-img" />
       <div className="hero-container">
         <div className="hero-content">
           <h1 className="hero-title">{event.title}</h1>
@@ -88,12 +75,8 @@ const FeaturedEventsSlider = () => {
           </div>
 
           <div className="hero-button-row">
-            <button className="hero-view-details-button">
-              VIEW DETAILS
-            </button>
-            <button className="hero-buy-ticket-button" disabled>
-              BUY TICKET
-            </button>
+            <button className="hero-view-details-button">VIEW DETAILS</button>
+            <button className="hero-buy-ticket-button" disabled>BUY TICKET</button>
           </div>
         </div>
       </div>
@@ -106,15 +89,12 @@ const FeaturedEventsSlider = () => {
 ===================================================== */
 const EventCard = ({ event }) => {
   const navigate = useNavigate();
+  const isExpired = new Date(event.eventDateTime) < new Date();
 
   return (
     <div className="event-card-container">
       <div className="image-wrapper">
-        <img
-          src={event.imageSrc}
-          alt={event.title}
-          className="event-card-image"
-        />
+        <img src={event.imageSrc} alt={event.title} className="event-card-image" />
       </div>
 
       <div className="card-details">
@@ -131,9 +111,10 @@ const EventCard = ({ event }) => {
 
         <button
           className="buy-button"
+          disabled={isExpired}
           onClick={() => navigate(`/events/${event._id}`)}
         >
-          BUY
+          {isExpired ? "EXPIRED" : "BUY"}
         </button>
       </div>
     </div>
@@ -144,7 +125,7 @@ const EventCard = ({ event }) => {
    TRENDING EVENTS
 ===================================================== */
 const TrendingEvents = React.forwardRef(
-  ({ searchTerm, priceRange, setPriceRange }, ref) => {
+  ({ searchTerm, priceRange, setPriceRange, showSnack }, ref) => {
     const [events, setEvents] = useState([]);
 
     useEffect(() => {
@@ -155,9 +136,9 @@ const TrendingEvents = React.forwardRef(
     }, []);
 
     const filteredEvents = events.filter((event) => {
-      const matchSearch = event.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      const matchSearch =
+        searchTerm.length < 3 ||
+        event.title.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchPrice =
         event.price >= priceRange[0] &&
@@ -182,16 +163,24 @@ const TrendingEvents = React.forwardRef(
               max="2000"
               step="500"
               value={priceRange[1]}
-              onChange={(e) =>
-                setPriceRange([0, Number(e.target.value)])
-              }
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                setPriceRange([0, val]);
+                showSnack(`Showing events under Rs ${val}`, "info");
+              }}
               className="price-slider"
             />
           </div>
         </div>
 
         <div className="events-grid">
-          {filteredEvents.length === 0 && <p>No events found.</p>}
+          {filteredEvents.length === 0 && (
+            <div className="empty-state">
+              <h3>No events found 😕</h3>
+              <p>Try adjusting your search or price range</p>
+            </div>
+          )}
+
           {filteredEvents.map((event) => (
             <EventCard key={event._id} event={event} />
           ))}
@@ -202,27 +191,27 @@ const TrendingEvents = React.forwardRef(
 );
 
 /* =====================================================
-   ADMIN BUTTON
-===================================================== */
-const AdminSwitchButton = () => (
-  <a href="/admin">
-    <button className="admin-switch-btn">🔑 Admin Panel</button>
-  </a>
-);
-
-/* =====================================================
    MAIN DASHBOARD
 ===================================================== */
 const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100000]);
+  const [snack, setSnack] = useState(null);
   const trendingRef = useRef(null);
 
+  const showSnack = (message, type = "info") => {
+    setSnack({ message, type });
+    setTimeout(() => setSnack(null), 3500);
+  };
+
+  useEffect(() => {
+    if (searchTerm && searchTerm.length < 3) {
+      showSnack("Type at least 3 characters to search", "warning");
+    }
+  }, [searchTerm]);
+
   const handleEventsClick = () => {
-    trendingRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+    trendingRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -235,16 +224,20 @@ const Dashboard = () => {
 
       <main className="main-content">
         <FeaturedEventsSlider />
-
         <TrendingEvents
           ref={trendingRef}
           searchTerm={searchTerm}
           priceRange={priceRange}
           setPriceRange={setPriceRange}
+          showSnack={showSnack}
         />
       </main>
 
-      <AdminSwitchButton />
+      {snack && (
+        <div className={`snackbar ${snack.type}`}>
+          {snack.message}
+        </div>
+      )}
     </div>
   );
 };

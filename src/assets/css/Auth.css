@@ -1,172 +1,177 @@
+/* OVERLAY */
 .auth-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.45);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 }
 
-.auth-container {
-  width: 900px;
-  height: 520px;
-  background: #fff;
-  border-radius: 20px;
+/* CARD */
+.auth-card {
+  width: 960px;
+  height: 560px;
+  background: #ffffff;
+  border-radius: 22px;
   display: flex;
   overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
 }
 
+/* LEFT */
 .auth-left {
   flex: 1;
-  padding: 45px;
+  padding: 52px;
+  display: flex;
+  flex-direction: column;
 }
 
-.auth-left h2 {
-  margin-bottom: 25px;
+.auth-left h1 {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.auth-sub {
+  font-size: 15px;
+  color: #64748b;
+  margin-bottom: 28px;
 }
 
 .auth-left input {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: 1px solid #cbd5e1;
   margin-bottom: 14px;
+  font-size: 15px;
 }
 
+.auth-left input:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 4px rgba(231,76,60,0.18);
+}
+
+/* PASSWORD */
 .password-wrapper {
   position: relative;
 }
 
 .password-wrapper span {
   position: absolute;
-  right: 15px;
+  right: 16px;
   top: 50%;
-  cursor: pointer;
   transform: translateY(-50%);
+  cursor: pointer;
 }
 
-.green-btn {
-  background: #5a9c3b;
-  color: white;
-  border: none;
-  padding: 14px;
-  width: 100%;
-  border-radius: 12px;
-  font-weight: bold;
+/* BUTTON */
+.primary-btn {
   margin-top: 10px;
+  padding: 16px;
+  border-radius: 999px;
+  border: none;
+  font-size: 16px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6aa84f, #5a9c3b);
+  color: white;
+  cursor: pointer;
 }
 
+.primary-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* SWITCH */
 .switch-text {
-  margin-top: 18px;
+  margin-top: auto;
   font-size: 14px;
 }
 
 .switch-text span {
-  color: #007bff;
+  color: #2563eb;
+  font-weight: 700;
   cursor: pointer;
 }
 
-.error-text {
-  color: red;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
+/* =========================
+   RIGHT SIDE – CLEAN LOGO
+========================= */
 .auth-right {
   flex: 1;
+  background: #ffffff; /* ✅ white background */
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border-left: 1px solid #f1f5f9;
 }
 
+/* LOGO */
 .auth-right img {
-  width: 240px;
+  width: 320px;        /* ✅ bigger logo */
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
-.auth-overlay {
+
+/* REMOVE TEXT COMPLETELY */
+.auth-right h2,
+.auth-right p {
+  display: none;
+}
+
+/* SNACKBAR */
+.snackbar {
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.auth-container {
-  width: 900px;
-  height: 520px;
-  background: #fff;
-  border-radius: 20px;
-  display: flex;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-}
-
-.auth-left {
-  flex: 1;
-  padding: 45px;
-}
-
-.auth-left h2 {
-  margin-bottom: 25px;
-}
-
-.auth-left input {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  margin-bottom: 14px;
-}
-
-.password-wrapper {
-  position: relative;
-}
-
-.password-wrapper span {
-  position: absolute;
-  right: 15px;
-  top: 50%;
-  cursor: pointer;
-  transform: translateY(-50%);
-}
-
-.green-btn {
-  background: #5a9c3b;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 24px;
+  border-radius: 999px;
   color: white;
-  border: none;
-  padding: 14px;
-  width: 100%;
-  border-radius: 12px;
-  font-weight: bold;
-  margin-top: 10px;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  animation: slideUp 0.3s ease;
 }
 
+.snackbar.success {
+  background: #22c55e;
+}
+
+.snackbar.error {
+  background: #ef4444;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+/* Reduce compact feeling */
+.auth-left {
+  padding: 52px;
+}
+
+/* Remove extra push on signup */
 .switch-text {
-  margin-top: 18px;
-  font-size: 14px;
+  margin-top: 22px;
 }
 
-.switch-text span {
-  color: #007bff;
-  cursor: pointer;
-}
-
-.error-text {
-  color: red;
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
+/* Logo side clean */
 .auth-right {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: #ffffff;
 }
 
 .auth-right img {
-  width: 240px;
+  width: 260px;   /* slightly bigger */
 }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../assets/css/Profile.css";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [notif, setNotif] = useState(true);
   const token = localStorage.getItem("eventghar_token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:5001/api/profile", {
@@ -49,9 +51,22 @@ const Profile = () => {
           <div className="profile-user">
             <span className="avatar">👤</span>
             <h3>{user.fullName}</h3>
+            {user.role === "admin" && (
+              <span className="admin-badge">ADMIN</span>
+            )}
           </div>
 
-          <button className="pill">Profile</button>
+          <button className="pill active">Profile</button>
+
+          {/* 🔑 ADMIN PANEL BUTTON */}
+          {user.role === "admin" && (
+            <button
+              className="admin-btn"
+              onClick={() => navigate("/admin")}
+            >
+              🔑 Admin Panel
+            </button>
+          )}
 
           <div className="notif-row">
             <span>Notification</span>

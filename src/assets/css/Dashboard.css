@@ -352,3 +352,79 @@ body {
 .admin-switch-btn:hover {
   transform: translateY(-2px);
 }
+/* ===============================
+   SNACKBAR (TOAST)
+================================ */
+
+.snackbar {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 9999;
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  animation: slideUp 0.35s ease;
+}
+
+.snackbar.info {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.snackbar.warning {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ===============================
+   EMPTY STATE
+================================ */
+
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+/* ===============================
+   UX LIMITERS
+================================ */
+
+.buy-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ===============================
+   MICRO INTERACTIONS
+================================ */
+
+.event-card-container:hover .event-card-title {
+  color: var(--primary-red);
+}
+
+.hero-view-details-button:hover,
+.hero-buy-ticket-button:hover {
+  transform: translateY(-2px) scale(1.03);
+}

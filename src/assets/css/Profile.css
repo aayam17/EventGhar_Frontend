@@ -111,3 +111,35 @@
   border-radius: 12px;
   font-weight: 600;
 }
+/* ADMIN BADGE */
+.admin-badge {
+  margin-left: 8px;
+  background: #fde68a;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+/* ADMIN PANEL BUTTON */
+.admin-btn {
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: #ffffff;
+  font-weight: 700;
+
+  box-shadow: 0 8px 20px rgba(52,152,219,0.45);
+  transition: all 0.25s ease;
+}
+
+.admin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(52,152,219,0.6);
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../assets/css/Auth.css";
+import EventGharLogo from "../assets/logo.png";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^(\+977)?9[6-9]\d{8}$/;
@@ -40,27 +41,33 @@ const Auth = ({ onSuccess }) => {
         }
       );
 
-      const data = await res.json(); // SAFE NOW
+      const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.message || "Authentication failed");
-      }
+      if (!res.ok) throw new Error(data.message);
 
       localStorage.setItem("eventghar_token", data.token);
       localStorage.setItem("eventghar_user", JSON.stringify(data.user));
 
       onSuccess();
     } catch (err) {
-      console.error("AUTH ERROR:", err);
-      setError(err.message || "Server error. Please try again.");
+      setError(err.message || "Something went wrong");
     }
   };
 
   return (
     <div className="auth-overlay">
-      <div className="auth-container">
+      <div className="auth-card">
+        {/* LEFT */}
         <div className="auth-left">
-          <h2>{mode === "signup" ? "Account Sign Up" : "Account Log In"}</h2>
+          <h1>
+            {mode === "signup" ? "Create your account" : "Welcome back"}
+          </h1>
+
+          {mode === "login" && (
+            <p className="auth-sub">
+              Log in to manage your bookings
+            </p>
+          )}
 
           {mode === "signup" && (
             <input
@@ -105,10 +112,11 @@ const Auth = ({ onSuccess }) => {
 
           {error && <p className="error-text">{error}</p>}
 
-          <button className="green-btn" onClick={submit}>
+          <button className="primary-btn" onClick={submit}>
             {mode === "signup" ? "SIGN UP" : "LOG IN"}
           </button>
 
+          {/* ✅ MATCH LOGIN STYLE */}
           <p className="switch-text">
             {mode === "signup"
               ? "Already have an account?"
@@ -118,13 +126,14 @@ const Auth = ({ onSuccess }) => {
                 setMode(mode === "signup" ? "login" : "signup")
               }
             >
-              {mode === "signup" ? "Log In" : "Sign Up"}
+              {mode === "signup" ? "Log in" : "Sign up"}
             </span>
           </p>
         </div>
 
+        {/* RIGHT */}
         <div className="auth-right">
-          <img src="/logo.png" alt="Event Ghar" />
+          <img src={EventGharLogo} alt="Event Ghar" />
         </div>
       </div>
     </div>
