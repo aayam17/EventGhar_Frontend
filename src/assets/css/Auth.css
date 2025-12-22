@@ -1,0 +1,172 @@
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.auth-container {
+  width: 900px;
+  height: 520px;
+  background: #fff;
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.auth-left {
+  flex: 1;
+  padding: 45px;
+}
+
+.auth-left h2 {
+  margin-bottom: 25px;
+}
+
+.auth-left input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 14px;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper span {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.green-btn {
+  background: #5a9c3b;
+  color: white;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.switch-text {
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.switch-text span {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.auth-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-right img {
+  width: 240px;
+}
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.auth-container {
+  width: 900px;
+  height: 520px;
+  background: #fff;
+  border-radius: 20px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.auth-left {
+  flex: 1;
+  padding: 45px;
+}
+
+.auth-left h2 {
+  margin-bottom: 25px;
+}
+
+.auth-left input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 14px;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper span {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.green-btn {
+  background: #5a9c3b;
+  color: white;
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.switch-text {
+  margin-top: 18px;
+  font-size: 14px;
+}
+
+.switch-text span {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.auth-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-right img {
+  width: 240px;
+}

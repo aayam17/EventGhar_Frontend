@@ -1,18 +1,38 @@
+import { useState } from "react";
+import Auth from "./Auth";
+import "../assets/css/StepPayment.css";
+
 const StepPayment = ({ order, event }) => {
-  const handleEsewaPay = async () => {
+  const [showAuth, setShowAuth] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const isLoggedIn = () =>
+    !!localStorage.getItem("eventghar_token");
+
+  const handleEsewaPay = () => {
+    if (!isLoggedIn()) {
+      setShowAuth(true);
+      return;
+    }
+    proceedEsewa();
+  };
+
+  const proceedEsewa = async () => {
     if (!order.total || order.total <= 0) {
       alert("Invalid payment amount");
       return;
     }
 
     try {
+      setLoading(true);
+
       const res = await fetch("http://localhost:5001/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           eventId: event._id,
           eventTitle: event.title,
-          user: order.user,
+          user: JSON.parse(localStorage.getItem("eventghar_user")),
           tickets: order.tickets.filter((t) => t.qty > 0),
           promoCode: order.promoCode,
           discount: order.discount || 0,
@@ -21,6 +41,8 @@ const StepPayment = ({ order, event }) => {
           payment: { method: "ESEWA", status: "PENDING" },
         }),
       });
+
+      if (!res.ok) throw new Error("Order creation failed");
 
       const savedOrder = await res.json();
 
@@ -50,15 +72,33 @@ const StepPayment = ({ order, event }) => {
 
       document.body.appendChild(form);
       form.submit();
-    } catch {
+    } catch (err) {
       alert("Payment initiation failed. Try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (showAuth) {
+    return (
+      <Auth
+        onSuccess={() => {
+          setShowAuth(false);
+          proceedEsewa();
+        }}
+      />
+    );
+  }
+
   return (
     <div className="step-card payment">
-      <button className="esewa-btn" onClick={handleEsewaPay}>
-        PAY WITH ESEWA
+      <button
+        className="esewa-btn"
+        disabled={loading}
+        onClick={handleEsewaPay}
+      >
+        {loading ? "PROCESSING..." : "PAY WITH ESEWA"}
       </button>
     </div>
   );

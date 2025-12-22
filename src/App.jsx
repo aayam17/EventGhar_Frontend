@@ -7,6 +7,7 @@ import Checkout from "./pages/Checkout.jsx";
 import Ticket from "./pages/Ticket";
 import MyBookings from "./pages/MyBookings"; 
 import ContactUs from "./pages/ContactUs";
+import Profile from "./pages/Profile";
 
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
@@ -27,6 +28,7 @@ function App() {
         <Route path="/ticket/:orderId" element={<Ticket />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

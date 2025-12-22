@@ -154,3 +154,46 @@
     width: 160px;
   }
 }
+
+/* USER DROPDOWN */
+.navbar-user {
+  position: relative;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  width: 180px;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-radius: 10px;
+  padding: 10px;
+  z-index: 999;
+}
+
+.user-dropdown button {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.user-dropdown button:hover {
+  background: #f5f5f5;
+}
+
+.user-dropdown .logout {
+  color: #e74c3c;
+}
+
+.user-name {
+  font-weight: 600;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 5px;
+}

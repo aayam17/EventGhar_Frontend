@@ -1,0 +1,31 @@
+/* StepPayment.css */
+
+.step-card.payment {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.esewa-btn {
+  background-color: #5a9c3b;
+  color: #fff;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(90, 156, 59, 0.35);
+  transition: all 0.25s ease;
+}
+
+.esewa-btn:hover {
+  background-color: #4b8831;
+  transform: translateY(-2px);
+}
+
+.esewa-btn:disabled {
+  background-color: #9ac18a;
+  cursor: not-allowed;
+  box-shadow: none;
+}

@@ -1,0 +1,113 @@
+.profile-wrapper {
+  padding: 60px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 280px 420px;
+  gap: 40px;
+}
+
+/* CARD */
+.profile-card {
+  border: 1px solid #ddd;
+  padding: 25px;
+  background: #fff;
+}
+
+/* LEFT */
+.profile-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.avatar {
+  font-size: 24px;
+}
+
+.pill {
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  background: #f3f3f3;
+  border: none;
+  margin-bottom: 20px;
+}
+
+.notif-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+/* SWITCH */
+.switch {
+  position: relative;
+  width: 42px;
+  height: 22px;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  top: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+.switch input:checked + .slider {
+  background: #5a9c3b;
+}
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* LOGOUT */
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+/* RIGHT */
+.profile-card.right h4 {
+  margin-bottom: 20px;
+}
+
+.profile-card.right input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 14px;
+  background: #5a9c3b;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+}
