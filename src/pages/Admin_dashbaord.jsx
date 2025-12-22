@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 import AddEvent from "./AddEvent";
 import EventList from "./EventList";
@@ -8,7 +9,6 @@ import OrganizerRequests from "./OrganizerRequests";
 import AdminPromo from "./AdminPromo";
 import CustomerList from "./CustomerList";
 import AdminRefund from "./AdminRefund";
-
 
 /* ------------------ CONSTANTS ------------------ */
 const EventGharLogo =
@@ -45,10 +45,7 @@ const Sidebar = ({ activeItem, setActiveItem, onAdd }) => {
     { name: "Events", icon: EventIconSVG },
     { name: "Featured", icon: "⭐" },
     { name: "Customer", icon: "🧑‍💻" },
-
-    // ✅ ADDED (QR SCANNER)
     { name: "Scan Ticket", icon: "🎫" },
-
     { name: "Refund", icon: "🔄" },
     { name: "Organizer", icon: "🏢" },
     { name: "Settings", icon: "⚙️" },
@@ -120,10 +117,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   );
 };
 
-/* ================== QR SCANNER (INLINE) ================== */
-// ✅ ADDED (QR SCANNER)
-import { Html5QrcodeScanner } from "html5-qrcode";
-
+/* ================== QR SCANNER ================== */
 const AdminQRScanner = () => {
   useEffect(() => {
     const scanner = new Html5QrcodeScanner(
@@ -143,7 +137,6 @@ const AdminQRScanner = () => {
               body: JSON.stringify({ ticketId: decodedText }),
             }
           );
-
           const data = await res.json();
           alert(data.message);
         } catch {
@@ -157,117 +150,168 @@ const AdminQRScanner = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: 420 }}>
-      <h3>🎫 Scan Ticket QR</h3>
+    <div className="analytics-card" style={{ maxWidth: 420 }}>
+      <h3 className="card-title">🎫 Scan Ticket</h3>
       <div id="qr-reader" />
     </div>
   );
 };
 
 /* ================== MAIN DASHBOARD ================== */
-const AdminDashboard = () => {
+const AdminDashboard = () =>
+   {
+  
   const [activeItem, setActiveItem] = useState("Dashboard");
   const [eventModal, setEventModal] = useState(false);
   const [featuredModal, setFeaturedModal] = useState(false);
-  const [eventCount, setEventCount] = useState(0);
+  const [range, setRange] = useState("TODAY");
 
-  const [totalSales, setTotalSales] = useState(0);
-  const [customerCount, setCustomerCount] = useState(0);
-
-  const fetchEventsCount = async () => {
-    const res = await fetch("http://127.0.0.1:5001/api/events");
-    const data = await res.json();
-    setEventCount(data.length);
-  };
-
-  const fetchSalesData = async () => {
-    try {
-      const res = await fetch("http://localhost:5001/api/orders");
-      const orders = await res.json();
-
-      const paidOrders = orders.filter(
-        (o) => o.payment?.status === "PAID"
-      );
-
-      const total = paidOrders.reduce(
-        (sum, o) => sum + (o.total || 0),
-        0
-      );
-
-      setTotalSales(total);
-      setCustomerCount(paidOrders.length);
-    } catch (err) {
-      console.error("Failed to fetch sales data", err);
-    }
-  };
+  const [events, setEvents] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [refunds, setRefunds] = useState([]);
+  const [organizers, setOrganizers] = useState([]);
 
   useEffect(() => {
-    fetchEventsCount();
-    fetchSalesData();
+    fetch("http://127.0.0.1:5001/api/events").then(r => r.json()).then(setEvents);
+    fetch("http://localhost:5001/api/orders").then(r => r.json()).then(setOrders);
+    fetch("http://localhost:5001/api/orders/refunds").then(r => r.json()).then(setRefunds);
+    fetch("http://127.0.0.1:5001/api/host-requests").then(r => r.json()).then(setOrganizers);
   }, []);
 
+  const paidOrders = orders.filter(o => o.payment?.status === "PAID");
+  const totalSales = paidOrders.reduce((s, o) => s + (o.total || 0), 0);
+
   const metrics = [
-    {
-      label: "Income",
-      value: `NPR ${totalSales.toLocaleString()}`,
-      icon: "📊",
-      color: "#ffb700",
-    },
-    {
-      label: "Customers",
-      value: customerCount,
-      icon: "🧑‍💻",
-      color: "#55aaff",
-    },
-    {
-      label: "Events Live",
-      value: eventCount,
-      icon: "🎉",
-      color: "#2ecc71",
-    },
-    {
-      label: "Gross Sales",
-      value: `NPR ${totalSales.toLocaleString()}`,
-      icon: "💰",
-      color: "#3498db",
-    },
+    { label: "Income", value: `NPR ${totalSales.toLocaleString()}`, icon: "📊", color: "#ffb700" },
+    { label: "Customers", value: paidOrders.length, icon: "🧑‍💻", color: "#55aaff" },
+    { label: "Events Live", value: events.length, icon: "🎉", color: "#2ecc71" },
+    { label: "Gross Sales", value: `NPR ${totalSales.toLocaleString()}`, icon: "💰", color: "#3498db" },
   ];
 
-  /* ------------------ CONTENT SWITCH ------------------ */
-  const renderContent = () => {
-    if (activeItem === "Events")
-      return <EventList onEventChange={setEventCount} />;
+  const renderDashboard = () => {
+  const now = new Date();
 
-    if (activeItem === "Featured")
-      return <FeaturedManager />;
+  const inRange = (date) => {
+    const d = new Date(date);
+    if (range === "TODAY")
+      return d.toDateString() === now.toDateString();
 
-    if (activeItem === "Customer")
-      return <CustomerList />;
+    if (range === "WEEK")
+      return (now - d) / (1000 * 60 * 60 * 24) <= 7;
 
-    // ✅ ADD THIS BLOCK
-    if (activeItem === "Refund")
-      return <AdminRefund />;
+    if (range === "MONTH")
+      return d.getMonth() === now.getMonth();
 
+    return true;
+  };
 
-    if (activeItem === "Organizer")
-      return (
-        <>
-          <AdminPromo />
-          <OrganizerRequests />
-        </>
-      );
+  const filteredOrders = paidOrders.filter(o =>
+    inRange(o.createdAt)
+  );
 
-    // ✅ ADDED (QR SCANNER)
-    if (activeItem === "Scan Ticket")
-      return <AdminQRScanner />;
+  const totalSalesFiltered = filteredOrders.reduce(
+    (s, o) => s + (o.total || 0),
+    0
+  );
 
-    return (
-      <div className="metric-cards-container">
-        {metrics.map((m) => (
-          <MetricCard key={m.label} {...m} />
+  const revenueByEvent = {};
+  filteredOrders.forEach(o => {
+    revenueByEvent[o.eventTitle] =
+      (revenueByEvent[o.eventTitle] || 0) + o.total;
+  });
+
+  return (
+    <>
+      {/* RANGE TOGGLE */}
+      <div className="range-toggle">
+        {["TODAY", "WEEK", "MONTH"].map(r => (
+          <button
+            key={r}
+            className={range === r ? "active" : ""}
+            onClick={() => setRange(r)}
+          >
+            {r}
+          </button>
         ))}
       </div>
-    );
+
+      {/* METRICS */}
+      <div className="metric-cards-container">
+        <MetricCard icon="📊" label="Income"
+          value={`NPR ${totalSalesFiltered.toLocaleString()}`}
+          color="#ffb700" />
+
+        <MetricCard icon="🧑‍💻" label="Customers"
+          value={filteredOrders.length}
+          color="#55aaff" />
+
+        <MetricCard icon="🎉" label="Events Live"
+          value={events.length}
+          color="#2ecc71" />
+
+        <MetricCard icon="💰" label="Gross Sales"
+          value={`NPR ${totalSalesFiltered.toLocaleString()}`}
+          color="#3498db" />
+      </div>
+
+      {/* ACTION REQUIRED */}
+      <div className="analytics-card">
+        <h3 className="card-title">Action Required</h3>
+
+        {refunds.filter(r => r.status === "PENDING").length > 0 && (
+          <div className="alert-item">🔄 Pending refunds</div>
+        )}
+
+        {organizers.filter(o => o.status === "pending").length > 0 && (
+          <div className="alert-item">🏢 Organizer approvals pending</div>
+        )}
+
+        {filteredOrders.filter(o => !o.used).length > 10 && (
+          <div className="alert-item">🎫 High unused tickets</div>
+        )}
+      </div>
+
+      {/* TOP EVENTS */}
+      <div className="analytics-card">
+        <h3 className="card-title">Top Performing Events</h3>
+
+        {Object.entries(revenueByEvent)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+          .map(([title, value], i) => (
+            <div key={title} className="sales-item">
+              <span>#{i + 1}</span>
+              <strong>{title}</strong>
+              <span>NPR {value.toLocaleString()}</span>
+            </div>
+          ))}
+      </div>
+
+      {/* LIVE ACTIVITY */}
+      <div className="analytics-card">
+        <h3 className="card-title">Live Activity</h3>
+
+        {orders.slice(-8).reverse().map(o => (
+          <div key={o._id} className="sales-item">
+            <span>{o.user.name}</span>
+            <strong>{o.eventTitle}</strong>
+            <span>{o.used ? "🎫 Verified" : "💰 Paid"}</span>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+  const renderContent = () => {
+    if (activeItem === "Dashboard") return renderDashboard();
+    if (activeItem === "Events") return <EventList />;
+    if (activeItem === "Featured") return <FeaturedManager />;
+    if (activeItem === "Customer") return <CustomerList />;
+    if (activeItem === "Scan Ticket") return <AdminQRScanner />;
+    if (activeItem === "Refund") return <AdminRefund />;
+    if (activeItem === "Organizer") return (<><AdminPromo /><OrganizerRequests /></>);
+    return null;
   };
 
   return (
@@ -276,40 +320,22 @@ const AdminDashboard = () => {
 
       <div className="admin-app-container">
         <AdminHeader />
-
         <div className="admin-main-layout">
           <Sidebar
             activeItem={activeItem}
-            setActiveItem={(item) => {
-              setActiveItem(item);
-              setEventModal(false);
-              setFeaturedModal(false);
-            }}
-            onAdd={() =>
-              activeItem === "Featured"
-                ? setFeaturedModal(true)
-                : setEventModal(true)
-            }
+            setActiveItem={setActiveItem}
+            onAdd={() => activeItem === "Featured" ? setFeaturedModal(true) : setEventModal(true)}
           />
-
           <main className="admin-content-area">{renderContent()}</main>
         </div>
       </div>
 
-      {/* ADD EVENT */}
       <Modal isOpen={eventModal} onClose={() => setEventModal(false)}>
-        <AddEvent
-          onClose={() => setEventModal(false)}
-          onEventAdded={fetchEventsCount}
-        />
+        <AddEvent onClose={() => setEventModal(false)} />
       </Modal>
 
-      {/* ADD FEATURED EVENT */}
       <Modal isOpen={featuredModal} onClose={() => setFeaturedModal(false)}>
-        <AddFeaturedEvent
-          onClose={() => setFeaturedModal(false)}
-          onAdded={() => setActiveItem("Featured")}
-        />
+        <AddFeaturedEvent onClose={() => setFeaturedModal(false)} />
       </Modal>
     </>
   );
@@ -320,541 +346,291 @@ export default AdminDashboard;
 
 // --- 7. Styles for Admin Dashboard (Updated for SVG) ---
 const AdminDashboardStyles = `
-  /* ==================================== */
-  /* GLOBAL & UTILITY */
-  /* ==================================== */
-  :root {
-    --admin-bg-light: #f4f6f9;
-    --admin-sidebar-width: 250px;
-    --admin-sidebar-bg: #fff;
-    --admin-primary-red: #e74c3c;
-    --admin-text-dark: #333;
-    --admin-text-light: #555;
-    --admin-border-color: #eee;
-    --admin-card-bg: #fff;
-  }
+:root {
+  --admin-bg-light: #f6f7fb;
+  --admin-sidebar-width: 260px;
+  --admin-sidebar-bg: #ffffff;
+  --admin-primary-red: #e74c3c;
+  --admin-text-dark: #0f172a;
+  --admin-text-light: #64748b;
+  --admin-border-color: #e5e7eb;
+  --admin-card-bg: #ffffff;
+}
 
-  html, body, #root {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    min-height: 100vh !important;
-    overflow-x: hidden;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--admin-bg-light);
-  }
+/* ================= GLOBAL ================= */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(180deg, #f8fafc, #eef2f7);
+}
 
-  .admin-app-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    min-height: 100vh;
-  }
+.admin-app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
-  /* ==================================== */
-  /* HEADER */
-  /* ==================================== */
-  .admin-header {
-    height: 60px;
-    background-color: var(--admin-sidebar-bg);
-    border-bottom: 1px solid var(--admin-border-color);
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
+/* ================= HEADER ================= */
+.admin-header {
+  height: 64px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--admin-border-color);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
-  .admin-logo {
-    height: 30px;
-    width: auto;
-  }
+.header-title-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--admin-text-dark);
+}
 
-  .header-title-text {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--admin-text-dark);
-  }
+/* ================= LAYOUT ================= */
+.admin-main-layout {
+  display: flex;
+  flex: 1;
+}
 
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
+/* ================= SIDEBAR ================= */
+.admin-sidebar {
+  width: var(--admin-sidebar-width);
+  background: linear-gradient(180deg, #ffffff, #f9fafb);
+  padding: 22px 16px;
+  border-right: 1px solid var(--admin-border-color);
+}
 
-  .notification-icon, .user-icon {
-    font-size: 20px;
-    color: var(--admin-text-light);
-    cursor: pointer;
-  }
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 
-  .user-icon {
-    font-size: 30px;
-  }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--admin-text-light);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
 
-  .search-group {
-    position: relative;
-  }
+.nav-item:hover {
+  background: #f1f5f9;
+  color: var(--admin-text-dark);
+}
 
-  .header-search-box {
-    padding: 8px 15px;
-    padding-right: 35px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    min-width: 180px;
-    font-size: 14px;
-    background-color: var(--admin-bg-light);
-    transition: all 0.2s;
-  }
+.nav-item.active {
+  background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+  color: #ffffff;
+  box-shadow: 0 10px 30px rgba(231,76,60,0.35);
+}
 
-  .header-search-box:focus {
-    background-color: #fff;
-    border-color: var(--admin-primary-red);
-    outline: none;
-  }
+.nav-icon {
+  font-size: 18px;
+}
 
-  .search-icon {
-    position: absolute;
-    right: 15px;
-    color: #888;npm run dev
-    font-size: 16px;
-    pointer-events: none;
-  }
+/* ================= CONTENT ================= */
+.admin-content-area {
+  flex: 1;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
 
-  /* ==================================== */
-  /* MAIN LAYOUT */
-  /* ==================================== */
-  .admin-main-layout {
-    display: flex;
-    flex: 1;
-    width: 100%;
-  }
+/* ================= METRICS ================= */
+.metric-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
 
-  /* --- SIDEBAR --- */
-  .admin-sidebar {
-    width: var(--admin-sidebar-width);
-    background-color: var(--admin-sidebar-bg);
-    padding: 20px 15px;
-    border-right: 1px solid var(--admin-border-color);
-    flex-shrink: 0;
-    position: sticky;
-    top: 60px;
-    height: calc(100vh - 60px);
-    overflow-y: auto;
-  }
+.metric-card {
+  display: flex;
+  gap: 16px;
+  padding: 22px 26px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f9fafb);
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  border: 1px solid rgba(0,0,0,0.05);
+  transition: transform 0.25s ease;
+}
 
-  .new-event-btn {
-    width: 100%;
-    background-color: var(--admin-primary-red);
-    color: #fff;
-    border: none;
-    padding: 12px 0;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(231,76,60,0.2);
-    transition: background-color 0.2s;
-  }
+.metric-card:hover {
+  transform: translateY(-4px);
+}
 
-  .new-event-btn:hover {
-    background-color: #c0392b;
-  }
+.metric-icon-bg {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
 
-  .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-  }
+.metric-value {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--admin-text-dark);
+}
 
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 10px;
-    margin: 4px 0;
-    border-radius: 8px;
-    cursor: pointer;
-    color: var(--admin-text-light);
-    font-size: 15px;
-    font-weight: 500;
-    transition: background-color 0.2s, color 0.2s;
-  }
+.metric-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-text-light);
+}
 
-  .nav-item:hover {
-    background-color: #f0f0f0;
-  }
+/* ================= ANALYTICS ================= */
+.analytics-card {
+  background: linear-gradient(180deg, #ffffff, #f9fafb);
+  padding: 26px 28px;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.05);
+}
 
-  .nav-item.active {
-    background-color: var(--admin-primary-red);
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 2px 5px rgba(231,76,60,0.3);
-  }
+.card-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--admin-text-dark);
+}
 
-  .nav-item.active .svg-icon-style {
-    stroke: #fff;
-  }
+.sales-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--admin-text-light);
+  border-bottom: 1px dashed var(--admin-border-color);
+}
 
-  .nav-icon {
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.sales-item strong {
+  color: var(--admin-text-dark);
+}
 
-  .svg-icon-style {
-    width: 18px;
-    height: 18px;
-    stroke: currentColor;
-    transition: stroke 0.2s;
-  }
+.sales-item:last-child {
+  border-bottom: none;
+}
 
-  .sub-menu {
-    padding-left: 30px;
-    border-left: 2px solid var(--admin-border-color);
-    margin-left: 20px;
-  }
+/* ================= RANGE TOGGLE ================= */
+.range-toggle {
+  display: flex;
+  gap: 10px;
+}
 
-  .sub-menu-item {
-    padding: 8px 0;
-    font-size: 13px;
-    color: var(--admin-text-light);
-    cursor: pointer;
-    transition: color 0.2s;
-  }
+.range-toggle button {
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  background: #e5e7eb;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
 
-  .sub-menu-item:hover {
-    color: var(--admin-primary-red);
-  }
+.range-toggle button.active {
+  background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(231,76,60,0.35);
+}
 
-  /* --- CONTENT AREA --- */
+/* ================= ALERT ================= */
+.alert-item {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  color: #9a3412;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
   .admin-content-area {
-    flex-grow: 1;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    overflow-y: auto;
-    min-width: 0;
-  }
-
-  .metric-cards-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-  }
-
-  .metric-card {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: var(--admin-card-bg);
-    padding: 15px 25px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    border: 1px solid;
-  }
-
-  .metric-icon-bg {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-  }
-
-  .metric-details {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .metric-value {
-    font-size: 24px;
-    font-weight: 800;
-    color: var(--admin-text-dark);
-    line-height: 1.1;
-  }
-
-  .metric-label {
-    font-size: 14px;
-    color: var(--admin-text-light);
-    font-weight: 500;
-  }
-
-  .main-analytics-section {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 25px;
-    flex-grow: 1;
-  }
-
-  .analytics-card {
-    background-color: var(--admin-card-bg);
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    flex: 1;
-    min-width: 0;
   }
 
-  .card-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--admin-text-dark);
-    margin-bottom: 15px;
-    border-bottom: 1px solid var(--admin-border-color);
-    padding-bottom: 10px;
-  }
-
-  .sales-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px dashed var(--admin-border-color);
-  }
-
-  .sales-item:last-child {
-    border-bottom: none;
-  }
-
-  .sales-rank {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    color: var(--admin-text-dark);
-    font-size: 12px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .sales-details {
-    flex-grow: 1;
-    padding-left: 15px;
-  }
-
-  .item-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--admin-text-dark);
-  }
-
-  .item-sales-label {
-    font-size: 12px;
-    color: var(--admin-text-light);
-  }
-
-  .sales-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--admin-text-dark);
-    margin-right: 15px;
-    flex-shrink: 0;
-  }
-
-  .sales-chart-icon {
-    color: green;
-    font-size: 20px;
-    flex-shrink: 0;
-  }
-
-  .transaction-table-container {
+  .admin-sidebar {
     width: 100%;
-    overflow-x: auto;
   }
-
-  .transaction-table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 600px;
-  }
-
-  .transaction-table-container th, .transaction-table-container td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid var(--admin-border-color);
-    font-size: 14px;
-    color: var(--admin-text-light);
-  }
-
-  .transaction-table-container th {
-    font-weight: 600;
-    color: var(--admin-text-dark);
-    background-color: var(--admin-bg-light);
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-  }
-
-  .transaction-table-container tbody tr:hover {
-    background-color: #fafafa;
-  }
-
-  .transaction-table-container td:first-child {
-    font-weight: 600;
-    color: var(--admin-primary-red);
-  }
-
-  .status-badge {
-    padding: 5px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-block;
-  }
-
-  /* ==================================== */
-  /* RESPONSIVENESS */
-  /* ==================================== */
-  @media (max-width: 1024px) {
-    .admin-sidebar { width: 200px; }
-  }
-
-  @media (max-width: 768px) {
-    .admin-sidebar {
-      width: 100%;
-      height: auto;
-      border-right: none;
-      border-bottom: 1px solid var(--admin-border-color);
-      padding: 10px 20px;
-      position: relative;
-    }
-
-    .admin-main-layout { flex-direction: column; }
-    .header-title-text { display: none; }
-    .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; }
-    .new-event-btn { margin-bottom: 10px; }
-    .nav-item { padding: 8px 10px; font-size: 14px; }
-    .sub-menu { display: none; }
-    .header-actions { gap: 10px; }
-    .header-search-box { min-width: 120px; }
-    .main-analytics-section { grid-template-columns: 1fr; }
-    .metric-cards-container { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-    .admin-content-area { padding: 15px; gap: 15px; }
-  }
+}
 `;
+
 
 // Modern & Stylish Modal + Button CSS
 const modernCSS = `
-/* ===========================
-   MODAL STYLING
-=========================== */
-/* Overlay with subtle gradient & blur */
 .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(6px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-    opacity: 0;
-    animation: fadeInOverlay 0.3s forwards;
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.45);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
-/* Modal content box */
 .modal-content {
-    background: #ffffff;
-    padding: 30px 40px;
-    border-radius: 18px;
-    width: 90%;
-    max-width: 600px;
-    position: relative;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    transform: translateY(-30px);
-    animation: slideInModal 0.35s forwards;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+  background: #ffffff;
+  padding: 32px 36px;
+  border-radius: 22px;
+  max-width: 620px;
+  width: 92%;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
 }
 
-/* Close button */
 .modal-close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 28px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #888;
-    transition: color 0.2s, transform 0.2s;
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 28px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #94a3b8;
 }
+
 .modal-close-btn:hover {
-    color: #e74c3c;
-    transform: rotate(90deg) scale(1.2);
+  color: #e74c3c;
 }
 
-/* Fade-in overlay */
-@keyframes fadeInOverlay {
-    to { opacity: 1; }
-}
-
-/* Slide-in modal */
-@keyframes slideInModal {
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* ===========================
-   NEW EVENT BUTTON STYLING
-=========================== */
 .new-event-btn {
-    width: 100%;
-    background: linear-gradient(135deg, #e74c3c, #ff6b6b);
-    color: #fff;
-    border: none;
-    padding: 14px 0;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 20px rgba(231,76,60,0.3);
-    transition: all 0.3s ease;
+  background: linear-gradient(135deg, #e74c3c, #ff6b6b);
+  color: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 16px 34px rgba(231,76,60,0.4);
 }
 
 .new-event-btn:hover {
-    background: linear-gradient(135deg, #ff6b6b, #e74c3c);
-    box-shadow: 0 12px 25px rgba(231,76,60,0.4);
-    transform: translateY(-2px) scale(1.02);
-}
-
-.new-event-btn:active {
-    transform: translateY(0) scale(0.98);
-    box-shadow: 0 6px 15px rgba(231,76,60,0.25);
-}
-
-/* ===========================
-   RESPONSIVENESS
-=========================== */
-@media (max-width: 768px) {
-    .modal-content {
-        padding: 25px 20px;
-    }
-
-    .modal-close-btn {
-        font-size: 24px;
-        top: 12px;
-        right: 12px;
-    }
-
-    .new-event-btn {
-        font-size: 14px;
-        padding: 12px 0;
-    }
+  transform: translateY(-2px);
 }
 `;
 

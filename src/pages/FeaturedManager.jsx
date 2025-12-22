@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "../assets/css/FeaturedList.css"; // ✅ RELATIVE PATH
+import "../assets/css/FeaturedList.css";
 
 const FeaturedManager = () => {
   const [events, setEvents] = useState([]);
+  const [loadingId, setLoadingId] = useState(null);
 
   const load = async () => {
     const res = await fetch("http://127.0.0.1:5001/api/featured-events");
@@ -15,17 +16,23 @@ const FeaturedManager = () => {
   }, []);
 
   const toggle = async (id) => {
-    await fetch(`http://127.0.0.1:5001/api/featured-events/${id}/toggle`, {
-      method: "PATCH",
-    });
+    setLoadingId(id);
+    await fetch(
+      `http://127.0.0.1:5001/api/featured-events/${id}/toggle`,
+      { method: "PATCH" }
+    );
+    setLoadingId(null);
     load();
   };
 
   const remove = async (id) => {
     if (!window.confirm("Delete featured event?")) return;
-    await fetch(`http://127.0.0.1:5001/api/featured-events/${id}`, {
-      method: "DELETE",
-    });
+    setLoadingId(id);
+    await fetch(
+      `http://127.0.0.1:5001/api/featured-events/${id}`,
+      { method: "DELETE" }
+    );
+    setLoadingId(null);
     load();
   };
 
@@ -35,7 +42,9 @@ const FeaturedManager = () => {
       <div className="featured-divider" />
 
       {events.length === 0 && (
-        <div className="featured-empty">No featured events yet.</div>
+        <div className="featured-empty">
+          No featured events yet.
+        </div>
       )}
 
       {events.map((e) => (
@@ -48,10 +57,19 @@ const FeaturedManager = () => {
           </div>
 
           <div className="featured-actions">
-            <button className="featured-btn toggle" onClick={() => toggle(e._id)}>
+            <button
+              className="featured-btn toggle"
+              disabled={loadingId === e._id}
+              onClick={() => toggle(e._id)}
+            >
               {e.isActive ? "Disable" : "Enable"}
             </button>
-            <button className="featured-btn delete" onClick={() => remove(e._id)}>
+
+            <button
+              className="featured-btn delete"
+              disabled={loadingId === e._id}
+              onClick={() => remove(e._id)}
+            >
               Delete
             </button>
           </div>

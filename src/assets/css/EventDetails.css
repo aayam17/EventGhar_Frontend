@@ -274,3 +274,50 @@
   box-shadow:
     0 18px 40px rgba(0,0,0,0.22);
 }
+
+.snackbar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 999;
+  animation: fadeInOut 3s ease;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.ticket-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ticket-qty-controls button {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  font-size: 16px;
+}
