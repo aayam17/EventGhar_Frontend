@@ -143,3 +143,36 @@
   transform: translateY(-2px);
   box-shadow: 0 14px 28px rgba(52,152,219,0.6);
 }
+
+.pill.active {
+  background: #e5e7eb;
+  font-weight: 700;
+}
+
+.empty-state {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.gift-ticket {
+  padding: 14px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: all 0.25s ease;
+}
+
+.gift-ticket:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.gift-ticket span {
+  display: block;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+

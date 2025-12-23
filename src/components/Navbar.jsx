@@ -125,14 +125,6 @@ const Navbar = ({
             Host an Event
           </button>
 
-          {/* 🔐 ADMIN ACCESS */}
-          <button
-            className="navbar-admin-btn"
-            onClick={() => navigate("/admin/login")}
-          >
-            Admin Access
-          </button>
-
           {/* 👤 USER PROFILE */}
           <div className="navbar-user" ref={dropdownRef}>
             <span

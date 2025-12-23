@@ -26,13 +26,26 @@ const StepPayment = ({ order, event }) => {
     try {
       setLoading(true);
 
+      /* ✅ FIX: PROPER USER MAPPING */
+      const storedUser = JSON.parse(
+        localStorage.getItem("eventghar_user")
+      );
+
       const res = await fetch("http://localhost:5001/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           eventId: event._id,
           eventTitle: event.title,
-          user: JSON.parse(localStorage.getItem("eventghar_user")),
+
+          /* ✅ CRITICAL FIX */
+          user: {
+            id: storedUser._id,
+            name: storedUser.fullName,
+            email: storedUser.email,
+            phone: storedUser.phone,
+          },
+
           tickets: order.tickets.filter((t) => t.qty > 0),
           promoCode: order.promoCode,
           discount: order.discount || 0,

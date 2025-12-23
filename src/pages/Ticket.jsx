@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { QRCodeCanvas } from "qrcode.react";
 import html2canvas from "html2canvas";
@@ -8,6 +8,8 @@ import "../assets/css/Ticket.css";
 
 const Ticket = () => {
   const { orderId } = useParams();
+  const navigate = useNavigate();
+
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -15,12 +17,13 @@ const Ticket = () => {
   const [newEmail, setNewEmail] = useState("");
   const [newName, setNewName] = useState("");
 
-  const [snackbar, setSnackbar] = useState("");
+  const [snackbar, setSnackbar] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [exiting, setExiting] = useState(false);
 
   const ticketRef = useRef(null);
 
-  /* ================= LOAD ORDER ================= */
+  /* ================= LOAD ================= */
   useEffect(() => {
     fetch(`http://localhost:5001/api/orders/${orderId}`)
       .then((res) => res.json())
@@ -28,22 +31,29 @@ const Ticket = () => {
       .finally(() => setLoading(false));
   }, [orderId]);
 
+  /* ================= EXIT + REDIRECT ================= */
+  const redirectWithExit = () => {
+    setExiting(true);
+    setTimeout(() => navigate("/"), 450);
+  };
+
   /* ================= SNACKBAR ================= */
-  const notify = (msg) => {
-    setSnackbar(msg);
-    setTimeout(() => setSnackbar(""), 2800);
+  const notify = (type, text, autoExit = false) => {
+    setSnackbar({ type, text });
+    setTimeout(() => {
+      setSnackbar(null);
+      if (autoExit) redirectWithExit();
+    }, 1800);
   };
 
   /* ================= DOWNLOAD ================= */
   const downloadTicket = async () => {
     try {
       setBusy(true);
-      await new Promise((r) => setTimeout(r, 300));
 
       const canvas = await html2canvas(ticketRef.current, {
         scale: 3,
-        useCORS: true,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#fff",
       });
 
       const pdf = new jsPDF({
@@ -55,9 +65,9 @@ const Ticket = () => {
       pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0);
       pdf.save("event-ticket.pdf");
 
-      notify("🎉 Ticket downloaded successfully");
+      notify("success", "Ticket downloaded", true);
     } catch {
-      notify("❌ Failed to download ticket");
+      notify("error", "Download failed");
     } finally {
       setBusy(false);
     }
@@ -66,12 +76,13 @@ const Ticket = () => {
   /* ================= TRANSFER ================= */
   const transferTicket = async () => {
     if (!newEmail || !newName) {
-      notify("⚠️ Please fill all fields");
+      notify("warning", "Fill all fields");
       return;
     }
 
     try {
       setBusy(true);
+
       const res = await fetch(
         "http://localhost:5001/api/orders/transfer",
         {
@@ -82,24 +93,23 @@ const Ticket = () => {
       );
 
       if (!res.ok) throw new Error();
-      notify("🎫 Ticket transferred successfully");
+
       setShowTransfer(false);
-      setNewEmail("");
-      setNewName("");
+      notify("success", "Ticket transferred", true);
     } catch {
-      notify("❌ Transfer failed");
+      notify("error", "Transfer failed");
     } finally {
       setBusy(false);
     }
   };
 
-  if (loading) return <div className="ticket-loading">Loading ticket…</div>;
+  if (loading) return <div className="ticket-loading">Loading…</div>;
 
   return (
     <>
       <Navbar />
 
-      <div className="ticket-page">
+      <div className={`ticket-page ${exiting ? "fade-out" : ""}`}>
         <div className="ticket-card" ref={ticketRef}>
           <div className="ticket-header">
             <h2>{order.eventTitle}</h2>
@@ -108,63 +118,92 @@ const Ticket = () => {
 
           <div className="ticket-body">
             <div className="ticket-info">
-              <p><strong>Ticket ID:</strong> {order._id}</p>
+              <p><strong>ID:</strong> {order._id}</p>
               <p><strong>Name:</strong> {order.user.name}</p>
               <p><strong>Email:</strong> {order.user.email}</p>
-              <p><strong>Total Paid:</strong> NPR {order.total}</p>
+              <p><strong>Total:</strong> NPR {order.total}</p>
             </div>
 
             <div className="ticket-qr">
-              <p>SCAN QR AT ENTRY</p>
               <QRCodeCanvas value={order._id} size={160} />
             </div>
           </div>
         </div>
 
         <div className="ticket-actions">
-          <button
-            className="download-btn"
-            disabled={busy}
-            onClick={downloadTicket}
-          >
+          <button className="download-btn" disabled={busy} onClick={downloadTicket}>
             {busy ? "PROCESSING…" : "DOWNLOAD"}
           </button>
 
-          <button
-            className="download-btn secondary"
-            disabled={busy}
-            onClick={() => setShowTransfer(true)}
-          >
+          <button className="download-btn secondary" disabled={busy} onClick={() => setShowTransfer(true)}>
             TRANSFER
           </button>
         </div>
 
-        {/* ================= TRANSFER MODAL ================= */}
-        {showTransfer && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Transfer Ticket</h3>
+        {/* 👈 BACK HOME CTA */}
+        <button className="back-home" onClick={redirectWithExit}>
+          ← Back to Home
+        </button>
 
-              <input
-                placeholder="Recipient Name"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-              />
-              <input
-                placeholder="Registered Email"
-                value={newEmail}
-                onChange={(e) => setNewEmail(e.target.value)}
-              />
+        {/* MODAL */}
+{showTransfer && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Transfer Ticket</h3>
 
-              <button disabled={busy} onClick={transferTicket}>
-                {busy ? "SENDING…" : "SEND TICKET"}
-              </button>
-            </div>
+      <input
+        placeholder="Recipient Name"
+        value={newName}
+        onChange={(e) => setNewName(e.target.value)}
+      />
+
+      <input
+        placeholder="Recipient Email"
+        value={newEmail}
+        onChange={(e) => setNewEmail(e.target.value)}
+      />
+
+      {/* ACTION ROW */}
+      <div className="modal-actions">
+        {/* 👈 BACK (CLOSE MODAL ONLY) */}
+        <button
+          className="modal-back"
+          type="button"
+          onClick={() => {
+            setShowTransfer(false);
+            setNewName("");
+            setNewEmail("");
+          }}
+        >
+          ← Back
+        </button>
+
+        {/* SEND */}
+        <button
+          className="modal-primary"
+          disabled={busy}
+          onClick={transferTicket}
+        >
+          {busy ? "SENDING…" : "SEND"}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+        {/* SNACKBAR */}
+        {snackbar && (
+          <div className={`snackbar ${snackbar.type}`}>
+            <span className="icon">
+              {snackbar.type === "success" && "✅"}
+              {snackbar.type === "error" && "❌"}
+              {snackbar.type === "warning" && "⚠️"}
+            </span>
+            {snackbar.text}
+            <div className="snackbar-bar" />
           </div>
         )}
-
-        {/* ================= SNACKBAR ================= */}
-        {snackbar && <div className="snackbar">{snackbar}</div>}
       </div>
     </>
   );

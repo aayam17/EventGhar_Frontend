@@ -5,9 +5,16 @@ import "../assets/css/Profile.css";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [notif, setNotif] = useState(true);
+
+  const [giftedTickets, setGiftedTickets] = useState([]);
+  const [myTickets, setMyTickets] = useState([]);
+
+  const [activeTab, setActiveTab] = useState("profile");
+
   const token = localStorage.getItem("eventghar_token");
   const navigate = useNavigate();
 
+  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
     fetch("http://localhost:5001/api/profile", {
       headers: { Authorization: `Bearer ${token}` },
@@ -17,8 +24,21 @@ const Profile = () => {
         setUser(data);
         setNotif(data.notifications?.email);
       });
+
+    fetch("http://localhost:5001/api/profile/gifted-tickets", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(setGiftedTickets);
+
+    fetch("http://localhost:5001/api/profile/my-tickets", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(setMyTickets);
   }, []);
 
+  /* ================= SAVE PROFILE ================= */
   const saveProfile = async () => {
     await fetch("http://localhost:5001/api/profile", {
       method: "PUT",
@@ -46,7 +66,7 @@ const Profile = () => {
   return (
     <div className="profile-wrapper">
       <div className="profile-grid">
-        {/* LEFT CARD */}
+        {/* ================= LEFT CARD ================= */}
         <div className="profile-card left">
           <div className="profile-user">
             <span className="avatar">👤</span>
@@ -56,9 +76,27 @@ const Profile = () => {
             )}
           </div>
 
-          <button className="pill active">Profile</button>
+          <button
+            className={`pill ${activeTab === "profile" ? "active" : ""}`}
+            onClick={() => setActiveTab("profile")}
+          >
+            Profile
+          </button>
 
-          {/* 🔑 ADMIN PANEL BUTTON */}
+          <button
+            className={`pill ${activeTab === "tickets" ? "active" : ""}`}
+            onClick={() => setActiveTab("tickets")}
+          >
+            🎟 My Tickets
+          </button>
+
+          <button
+            className={`pill ${activeTab === "gifted" ? "active" : ""}`}
+            onClick={() => setActiveTab("gifted")}
+          >
+            🎁 Gifted Tickets
+          </button>
+
           {user.role === "admin" && (
             <button
               className="admin-btn"
@@ -85,31 +123,91 @@ const Profile = () => {
           </button>
         </div>
 
-        {/* RIGHT CARD */}
+        {/* ================= RIGHT CARD ================= */}
         <div className="profile-card right">
-          <h4>My Profile</h4>
+          {/* ===== PROFILE TAB ===== */}
+          {activeTab === "profile" && (
+            <>
+              <h4>My Profile</h4>
 
-          <input
-            value={user.fullName}
-            onChange={(e) =>
-              setUser({ ...user, fullName: e.target.value })
-            }
-            placeholder="Name"
-          />
+              <input
+                value={user.fullName}
+                onChange={(e) =>
+                  setUser({ ...user, fullName: e.target.value })
+                }
+                placeholder="Name"
+              />
 
-          <input value={user.email} disabled />
+              <input value={user.email} disabled />
 
-          <input
-            value={user.phone}
-            onChange={(e) =>
-              setUser({ ...user, phone: e.target.value })
-            }
-            placeholder="Phone Number"
-          />
+              <input
+                value={user.phone}
+                onChange={(e) =>
+                  setUser({ ...user, phone: e.target.value })
+                }
+                placeholder="Phone Number"
+              />
 
-          <button className="save-btn" onClick={saveProfile}>
-            Save Changes
-          </button>
+              <button className="save-btn" onClick={saveProfile}>
+                Save Changes
+              </button>
+            </>
+          )}
+
+          {/* ===== MY TICKETS TAB ===== */}
+          {activeTab === "tickets" && (
+            <>
+              <h4>🎟 My Tickets</h4>
+
+              {myTickets.length === 0 && (
+                <p className="empty-state">
+                  You haven’t purchased any tickets yet.
+                </p>
+              )}
+
+              {myTickets.map((ticket) => (
+                <div
+                  key={ticket._id}
+                  className="gift-ticket"
+                  onClick={() =>
+                    navigate(`/ticket/${ticket._id}`)
+                  }
+                >
+                  <strong>{ticket.eventTitle}</strong>
+                  <span>Purchased ticket</span>
+                </div>
+              ))}
+            </>
+          )}
+
+          {/* ===== GIFTED TICKETS TAB ===== */}
+          {activeTab === "gifted" && (
+            <>
+              <h4>🎁 Gifted Tickets</h4>
+
+              {giftedTickets.length === 0 && (
+                <p className="empty-state">
+                  No tickets have been gifted to you yet.
+                </p>
+              )}
+
+              {giftedTickets.map((ticket) => (
+                <div
+                  key={ticket._id}
+                  className="gift-ticket"
+                  onClick={() =>
+                    navigate(`/ticket/${ticket._id}`)
+                  }
+                >
+                  <strong>{ticket.eventTitle}</strong>
+                  <span>
+                    Gifted by{" "}
+                    {ticket.purchaser?.name || "EventGhar User"}
+                  </span>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
