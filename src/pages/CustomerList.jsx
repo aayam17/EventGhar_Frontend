@@ -6,20 +6,32 @@ const CustomerList = () => {
 
   useEffect(() => {
     fetch("http://localhost:5001/api/orders")
-      .then(res => res.json())
-      .then(setOrders);
+      .then((res) => res.json())
+      .then(setOrders)
+      .catch((err) => {
+        console.error("Failed to load orders", err);
+        setOrders([]);
+      });
   }, []);
 
   const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this order?");
+    const confirm = window.confirm(
+      "Are you sure you want to delete this order?"
+    );
     if (!confirm) return;
 
     try {
-      await fetch(`http://localhost:5001/api/orders/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `http://localhost:5001/api/orders/${id}`,
+        { method: "DELETE" }
+      );
 
-      setOrders(prev => prev.filter(o => o._id !== id));
+      if (!res.ok) {
+        alert("Delete API not implemented yet");
+        return;
+      }
+
+      setOrders((prev) => prev.filter((o) => o._id !== id));
     } catch (err) {
       alert("Failed to delete order");
       console.error(err);
@@ -34,55 +46,66 @@ const CustomerList = () => {
         <p className="empty-text">No customer orders yet.</p>
       )}
 
-      {orders.map(order => (
-        <div key={order._id} className="order-card">
-          <div className="order-header">
-            <div>
-              <strong className="customer-name">{order.user.name}</strong>
-              <p className="customer-email">{order.user.email}</p>
+      {orders.map((order) => {
+        const paymentStatus =
+          order.used
+            ? "TICKET VERIFIED"
+            : order.payment?.status || "PENDING";
+
+        return (
+          <div key={order._id} className="order-card">
+            <div className="order-header">
+              <div>
+                <strong className="customer-name">
+                  {order.user?.name || "Unknown User"}
+                </strong>
+                <p className="customer-email">
+                  {order.user?.email || "—"}
+                </p>
+              </div>
+
+              <div className="order-actions">
+                {/* ✅ SAFE STATUS BADGE */}
+                <span
+                  className={`order-status ${
+                    order.used ? "verified" : ""
+                  }`}
+                >
+                  {paymentStatus}
+                </span>
+
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDelete(order._id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
 
-            <div className="order-actions">
-              {/* ✅ STATUS BADGE */}
-              <span
-                className={`order-status ${
-                  order.used ? "verified" : ""
-                }`}
-              >
-                {order.used ? "TICKET VERIFIED" : order.payment.status}
-              </span>
-
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(order._id)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-
-          <p className="event-title">
-            <strong>Event:</strong> {order.eventTitle}
-          </p>
-
-          <ul className="ticket-list">
-            {order.tickets.map((t, i) => (
-              <li key={i}>
-                {t.type} × {t.qty}
-                <span>NPR {t.price * t.qty}</span>
-              </li>
-            ))}
-          </ul>
-
-          <div className="order-summary">
-            <p>Promo: {order.promoCode || "None"}</p>
-            <p>Discount: NPR {order.discount}</p>
-            <p className="order-total">
-              Total: NPR {order.total}
+            <p className="event-title">
+              <strong>Event:</strong> {order.eventTitle}
             </p>
+
+            <ul className="ticket-list">
+              {order.tickets?.map((t, i) => (
+                <li key={i}>
+                  {t.type} × {t.qty}
+                  <span>NPR {t.price * t.qty}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="order-summary">
+              <p>Promo: {order.promoCode || "None"}</p>
+              <p>Discount: NPR {order.discount || 0}</p>
+              <p className="order-total">
+                Total: NPR {order.total || 0}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

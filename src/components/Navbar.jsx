@@ -1,78 +1,58 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useNotifications } from "../context/NotificationContext";
 import "../assets/css/Navbar.css";
 import EventGharLogo from "../assets/logo.png";
 
-const Navbar = ({
-  searchTerm = "",
-  setSearchTerm = () => {},
-  onEventsClick,
-}) => {
+const Navbar = ({ searchTerm = "", setSearchTerm = () => {}, onEventsClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dropdownRef = useRef(null);
+
+  const { notifications, unreadCount, markAsRead } = useNotifications();
 
   const [open, setOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
   const [active, setActive] = useState("Home");
-  const dropdownRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem("eventghar_user"));
   const isLoggedIn = !!localStorage.getItem("eventghar_token");
 
-  /* ================= ACTIVE LINK TRACKING ================= */
   useEffect(() => {
     if (location.pathname === "/") setActive("Home");
     else if (location.pathname === "/contact") setActive("Contact Us");
     else if (location.pathname === "/my-bookings") setActive("My Bookings");
   }, [location.pathname]);
 
-  /* ================= EVENTS CLICK ================= */
   const handleEventsClick = (e) => {
     e.preventDefault();
     setActive("Events");
     navigate("/");
-
-    setTimeout(() => {
-      if (onEventsClick) onEventsClick();
-    }, 120);
+    setTimeout(() => onEventsClick && onEventsClick(), 120);
   };
 
-  /* ================= OUTSIDE CLICK ================= */
   useEffect(() => {
     const handleOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
+        setNotifOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
-
-  const logout = () => {
-    localStorage.clear();
-    setOpen(false);
-    navigate("/");
-    window.location.reload();
-  };
 
   const navLinks = ["Home", "Events", "Contact Us", "My Bookings"];
 
   return (
     <nav className="navbar-container">
       <div className="navbar-inner">
-        {/* LOGO */}
         <img
           src={EventGharLogo}
-          alt="Event Ghar Logo"
           className="navbar-logo-img"
-          onClick={() => {
-            setActive("Home");
-            navigate("/");
-          }}
+          onClick={() => navigate("/")}
         />
 
-        {/* LINKS */}
         <div className="navbar-links">
           {navLinks.map((label) => (
             <a
@@ -98,26 +78,51 @@ const Navbar = ({
           ))}
         </div>
 
-        {/* ACTIONS */}
         <div className="navbar-actions">
           {/* 🔔 NOTIFICATIONS */}
-          <button
-            className="navbar-notification-btn"
-            aria-label="Notifications"
-          >
-            🔔
-          </button>
+          <div className="navbar-user" ref={dropdownRef}>
+            <button
+              className="navbar-notification-btn"
+              onClick={() => setNotifOpen((p) => !p)}
+            >
+              🔔
+              {unreadCount > 0 && (
+                <span className="notification-badge">{unreadCount}</span>
+              )}
+            </button>
 
-          {/* SEARCH */}
+            {notifOpen && (
+              <div className="user-dropdown">
+                {notifications.length === 0 && (
+                  <p className="user-name">No notifications</p>
+                )}
+
+                {notifications.map((n) => (
+                  <button
+                    key={n._id}
+                    onClick={() => {
+                      markAsRead(n._id);
+                      navigate(n.link);
+                      setNotifOpen(false);
+                    }}
+                    style={{
+                      fontWeight: n.read ? "normal" : "700",
+                    }}
+                  >
+                    {n.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <input
-            type="text"
             className="navbar-search-box"
             placeholder="Search events..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
 
-          {/* HOST */}
           <button
             className="navbar-host-button"
             onClick={() => navigate("/host")}
@@ -125,33 +130,27 @@ const Navbar = ({
             Host an Event
           </button>
 
-          {/* 👤 USER PROFILE */}
+          {/* 👤 USER */}
           <div className="navbar-user" ref={dropdownRef}>
-            <span
-              className="navbar-icon"
-              onClick={() => {
-                if (!isLoggedIn) return;
-                setOpen((prev) => !prev);
-              }}
-            >
+            <span className="navbar-icon" onClick={() => setOpen(!open)}>
               👤
             </span>
 
-            {open && isLoggedIn && (
+            {open && (
               <div className="user-dropdown">
-                <p className="user-name">
-                  {user?.fullName || "My Account"}
-                </p>
-
-                <button onClick={() => navigate("/profile")}>
-                  My Profile
-                </button>
-
+                <p className="user-name">{user?.fullName}</p>
+                <button onClick={() => navigate("/profile")}>My Profile</button>
                 <button onClick={() => navigate("/my-bookings")}>
                   My Bookings
                 </button>
-
-                <button className="logout" onClick={logout}>
+                <button
+                  className="logout"
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate("/");
+                    window.location.reload();
+                  }}
+                >
                   Log out
                 </button>
               </div>
