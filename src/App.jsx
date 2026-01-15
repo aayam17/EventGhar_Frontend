@@ -21,7 +21,7 @@ function App() {
     <NotificationProvider>
       <Router>
         <Routes>
-          {/* PUBLIC */}
+          {/* USER */}
           <Route path="/" element={<Dashboard />} />
           <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/checkout/:id" element={<Checkout />} />
