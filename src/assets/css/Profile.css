@@ -1,82 +1,140 @@
 .profile-wrapper {
-  padding: 60px 0;
+  padding: 80px 40px;
   display: flex;
   justify-content: center;
+  background: #f7f8fa;
+  min-height: 100vh;
 }
 
 .profile-grid {
   display: grid;
-  grid-template-columns: 280px 420px;
+  grid-template-columns: 300px 480px;
   gap: 40px;
+  align-items: start;
 }
 
 /* CARD */
 .profile-card {
-  border: 1px solid #ddd;
-  padding: 25px;
-  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 28px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
 /* LEFT */
 .profile-user {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 25px;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid #f3f4f6;
 }
 
 .avatar {
-  font-size: 24px;
+  font-size: 32px;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius: 50%;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.profile-user h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a;
 }
 
 .pill {
   width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  background: #f3f3f3;
-  border: none;
-  margin-bottom: 20px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: #374151;
+}
+
+.pill:hover {
+  background: #f3f4f6;
+  transform: translateX(4px);
+}
+
+.pill.active {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  border-color: #93c5fd;
+  font-weight: 700;
+  color: #1e40af;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(59,130,246,0.2);
 }
 
 .notif-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin: 24px 0;
+  padding: 16px 0;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.notif-row span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
 }
 
 /* SWITCH */
 .switch {
   position: relative;
-  width: 42px;
-  height: 22px;
+  width: 48px;
+  height: 26px;
 }
+
 .switch input {
   display: none;
 }
+
 .slider {
   position: absolute;
   inset: 0;
-  background: #ccc;
-  border-radius: 20px;
+  background: #d1d5db;
+  border-radius: 999px;
   cursor: pointer;
+  transition: 0.3s;
 }
+
 .slider::before {
   content: "";
   position: absolute;
-  height: 18px;
-  width: 18px;
-  left: 2px;
-  top: 2px;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  top: 3px;
   background: #fff;
   border-radius: 50%;
   transition: 0.3s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+
 .switch input:checked + .slider {
   background: #5a9c3b;
 }
+
 .switch input:checked + .slider::before {
-  transform: translateX(20px);
+  transform: translateX(22px);
 }
 
 /* LOGOUT */
@@ -84,89 +142,137 @@
   background: #e74c3c;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 14px;
+  border-radius: 12px;
   width: 100%;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 8px 20px rgba(231,76,60,0.4);
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(231,76,60,0.5);
 }
 
 /* RIGHT */
+.profile-card.right {
+  padding: 36px;
+}
+
 .profile-card.right h4 {
-  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 28px;
+  color: #0f172a;
 }
 
 .profile-card.right input {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 14px;
+  padding: 14px 18px;
+  margin-bottom: 16px;
   border-radius: 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.profile-card.right input:focus {
+  outline: none;
+  border-color: #5a9c3b;
+  box-shadow: 0 0 0 4px rgba(90,156,59,0.1);
+}
+
+.profile-card.right input:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
 }
 
 .save-btn {
   width: 100%;
-  padding: 14px;
+  padding: 16px;
   background: #5a9c3b;
   color: white;
   border: none;
   border-radius: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 10px 24px rgba(90,156,59,0.4);
+  margin-top: 12px;
 }
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(90,156,59,0.5);
+}
+
 /* ADMIN BADGE */
 .admin-badge {
-  margin-left: 8px;
-  background: #fde68a;
+  margin-left: auto;
+  background: #fef3c7;
   color: #92400e;
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ADMIN PANEL BUTTON */
 .admin-btn {
   width: 100%;
   margin-bottom: 16px;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
-
   background: linear-gradient(135deg, #3498db, #2980b9);
   color: #ffffff;
   font-weight: 700;
-
-  box-shadow: 0 8px 20px rgba(52,152,219,0.45);
+  font-size: 14px;
+  box-shadow: 0 10px 24px rgba(52,152,219,0.45);
   transition: all 0.25s ease;
 }
 
 .admin-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(52,152,219,0.6);
-}
-
-.pill.active {
-  background: #e5e7eb;
-  font-weight: 700;
+  box-shadow: 0 14px 32px rgba(52,152,219,0.6);
 }
 
 .empty-state {
   font-size: 14px;
-  color: #6b7280;
+  color: #9ca3af;
+  text-align: center;
+  padding: 40px 20px;
 }
 
 .gift-ticket {
-  padding: 14px;
-  border-radius: 12px;
-  background: #f9fafb;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f9fafb, #ffffff);
   border: 1px solid #e5e7eb;
   cursor: pointer;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   transition: all 0.25s ease;
 }
 
 .gift-ticket:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  border-color: #d1d5db;
+}
+
+.gift-ticket strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #0f172a;
 }
 
 .gift-ticket span {
@@ -175,4 +281,17 @@
   color: #6b7280;
 }
 
+/* ===============================
+   RESPONSIVE
+================================ */
 
+@media (max-width: 900px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+  
+  .profile-wrapper {
+    padding: 40px 20px;
+  }
+}

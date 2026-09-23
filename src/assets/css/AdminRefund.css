@@ -1,4 +1,145 @@
 /* =====================================================
+   REFUND MANAGEMENT — LAYOUT (event picker + eligibility)
+===================================================== */
+
+.refund-management {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.refund-subtitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+
+.refund-event-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.refund-event-picker label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.refund-event-picker select {
+  width: 100%;
+  max-width: 480px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.1);
+  font-size: 14px;
+  font-weight: 600;
+  background: #ffffff;
+  color: #111;
+}
+
+.refund-quick-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.refund-quick-jump button {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(245,158,11,0.35);
+  background: linear-gradient(#fff7ed, #ffedd5);
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.refund-quick-jump button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(245,158,11,0.25);
+}
+
+/* ---------------- ELIGIBILITY CARD ---------------- */
+
+.refund-eligibility-card {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 18px;
+  padding: 20px 22px;
+  margin-bottom: 26px;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.08);
+}
+
+.refund-eligibility-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.refund-eligibility-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 6px;
+}
+
+.refund-reason-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+.refund-eligibility-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.refund-eligibility-actions button {
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: none;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.refund-eligibility-actions .approve {
+  background: linear-gradient(135deg, #34d399, #22c55e);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(34,197,94,0.35);
+}
+
+.refund-eligibility-actions .reject {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(239,68,68,0.35);
+}
+
+.refund-eligibility-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.refund-list-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #111;
+  margin: 4px 0 14px;
+}
+
+/* =====================================================
    REFUND REQUEST CARD – COLORFUL PREMIUM ADMIN
 ===================================================== */
 

@@ -5,6 +5,8 @@
 .add-featured-form {
   background: linear-gradient(180deg, #ffffff, #fafafa);
   padding: 30px 32px;
+  max-height: 80vh;
+  overflow-y: auto;
 
   border-radius: 18px;
   border: 1px solid rgba(0,0,0,0.06);
@@ -25,8 +27,17 @@
   letter-spacing: -0.3px;
 }
 
+.add-featured-hint {
+  margin: -4px 0 4px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #666;
+}
+
 /* Inputs */
-.add-featured-form input {
+.add-featured-form input,
+.add-featured-form select,
+.add-featured-form textarea {
   padding: 13px 16px;
   border-radius: 12px;
   border: 1px solid #ddd;
@@ -36,7 +47,14 @@
   transition: all 0.2s ease;
 }
 
-.add-featured-form input:focus {
+.add-featured-form textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.add-featured-form input:focus,
+.add-featured-form select:focus,
+.add-featured-form textarea:focus {
   outline: none;
   border-color: #e74c3c;
   box-shadow: 0 0 0 4px rgba(231,76,60,0.15);

@@ -131,6 +131,26 @@
   min-width: 0;
 }
 
+/* THUMBNAIL – shows the full image, never cropped */
+.featured-thumb {
+  flex-shrink: 0;
+  width: 200px;
+  height: 130px;
+  border-radius: 14px;
+  background: #f4f4f5;
+  border: 1px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.featured-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 /* Event title */
 .featured-title {
   font-size: 16px;
@@ -230,6 +250,11 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 18px 10px;
+  }
+
+  .featured-thumb {
+    width: 100%;
+    height: 180px;
   }
 
   .featured-actions {

@@ -1,42 +1,77 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { api, userHeaders } from "../lib/api";
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
-  const token = localStorage.getItem("eventghar_token");
 
-  const loadNotifications = async () => {
+  const loadNotifications = useCallback(async () => {
+    const token = localStorage.getItem("eventghar_token");
+    if (!token) {
+      setNotifications([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(api("/api/notifications"), {
+        headers: userHeaders(false),
+      });
+      if (!res.ok) return setNotifications([]);
+      setNotifications(await res.json());
+    } catch {
+      setNotifications([]);
+    }
+  }, []);
+
+  const markAsRead = async (id) => {
+    const token = localStorage.getItem("eventghar_token");
     if (!token) return;
-    const res = await fetch("http://localhost:5001/api/notifications", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    setNotifications(await res.json());
+
+    try {
+      await fetch(api(`/api/notifications/${id}/read`), {
+        method: "POST",
+        headers: userHeaders(false),
+      });
+    } finally {
+      loadNotifications();
+    }
   };
 
-  const markRead = async (id) => {
-    await fetch(
-      `http://localhost:5001/api/notifications/${id}/read`,
-      {
+  const markAllAsRead = async () => {
+    const token = localStorage.getItem("eventghar_token");
+    if (!token) return;
+
+    try {
+      await fetch(api("/api/notifications/read-all"), {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    loadNotifications();
+        headers: userHeaders(false),
+      });
+    } finally {
+      loadNotifications();
+    }
   };
 
   useEffect(() => {
     loadNotifications();
-  }, []);
+    // Pick up notifications shortly after login/logout without a full refresh
+    const interval = setInterval(loadNotifications, 30000);
+    window.addEventListener("storage", loadNotifications);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("storage", loadNotifications);
+    };
+  }, [loadNotifications]);
+
+  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, markRead }}
+      value={{ notifications, unreadCount, markAsRead, markAllAsRead, refresh: loadNotifications }}
     >
       {children}
     </NotificationContext.Provider>
   );
 };
 
-export const useNotifications = () =>
-  useContext(NotificationContext);
+export const useNotifications = () => useContext(NotificationContext);

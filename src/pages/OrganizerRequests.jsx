@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "/Users/aayambhattarai/EventGhar/frontend/frontend/src/assets/css/OrganizerRequests.css";
+import "../assets/css/OrganizerRequests.css";
+import { api, adminHeaders } from "../lib/api";
 /* ---------------- MODAL ---------------- */
 const Modal = ({ open, onClose, children }) => {
   if (!open) return null;
@@ -19,7 +20,9 @@ const OrganizerRequests = () => {
   const [selected, setSelected] = useState(null);
 
   const load = async () => {
-    const res = await fetch("http://127.0.0.1:5001/api/host-requests");
+    const res = await fetch(api("/api/host-requests"), {
+      headers: adminHeaders(false),
+    });
     const data = await res.json();
     setRequests(Array.isArray(data) ? data : []);
   };
@@ -29,9 +32,9 @@ const OrganizerRequests = () => {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await fetch(`http://127.0.0.1:5001/api/host-requests/${id}`, {
+    await fetch(api(`/api/host-requests/${id}`), {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: adminHeaders(),
       body: JSON.stringify({ status }),
     });
     load();

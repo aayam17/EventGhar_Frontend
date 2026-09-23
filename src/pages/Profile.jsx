@@ -1,59 +1,84 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../assets/css/Profile.css";
+import { User, Ticket as TicketIcon, Gift, ShieldCheck, LogOut } from "lucide-react";
+import Page from "../components/layout/Page";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import EmptyState from "../components/ui/EmptyState";
+import Toast, { useSnack } from "../components/ui/Toast";
+import { api, userHeaders } from "../lib/api";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [notif, setNotif] = useState(true);
-
   const [giftedTickets, setGiftedTickets] = useState([]);
   const [myTickets, setMyTickets] = useState([]);
-
   const [activeTab, setActiveTab] = useState("profile");
+  const [saving, setSaving] = useState(false);
+  const [snack, showSnack] = useSnack();
 
   const token = localStorage.getItem("eventghar_token");
   const navigate = useNavigate();
 
-  /* ================= LOAD PROFILE ================= */
   useEffect(() => {
-    fetch("http://localhost:5001/api/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-        setNotif(data.notifications?.email);
-      });
+    // Not logged in, or the saved login has expired: go home instead of
+    // trying to render an error response as if it were a profile.
+    if (!token) {
+      navigate("/", { replace: true });
+      return;
+    }
 
-    fetch("http://localhost:5001/api/profile/gifted-tickets", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then(setGiftedTickets);
+    const load = (path, onData) =>
+      fetch(api(path), { headers: userHeaders(false) })
+        .then((res) => {
+          if (res.status === 401) {
+            localStorage.removeItem("eventghar_token");
+            localStorage.removeItem("eventghar_user");
+            navigate("/", { replace: true });
+            throw new Error("expired");
+          }
+          if (!res.ok) throw new Error("failed");
+          return res.json();
+        })
+        .then(onData)
+        .catch(() => {});
 
-    fetch("http://localhost:5001/api/profile/my-tickets", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then(setMyTickets);
+    load("/api/profile", (data) => {
+      setUser(data);
+      setNotif(data.notifications?.email ?? true);
+    });
+    load("/api/profile/gifted-tickets", (d) => setGiftedTickets(Array.isArray(d) ? d : []));
+    load("/api/profile/my-tickets", (d) => setMyTickets(Array.isArray(d) ? d : []));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /* ================= SAVE PROFILE ================= */
   const saveProfile = async () => {
-    await fetch("http://localhost:5001/api/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        fullName: user.fullName,
-        phone: user.phone,
-        notifications: { email: notif },
-      }),
-    });
+    try {
+      setSaving(true);
+      const res = await fetch(api("/api/profile"), {
+        method: "PUT",
+        headers: userHeaders(),
+        body: JSON.stringify({
+          fullName: user.fullName,
+          phone: user.phone,
+          notifications: { email: notif },
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Couldn't save changes");
 
-    alert("Profile updated");
+      // Keep the name shown in the navbar in sync
+      const stored = JSON.parse(localStorage.getItem("eventghar_user") || "{}");
+      localStorage.setItem(
+        "eventghar_user",
+        JSON.stringify({ ...stored, fullName: data.fullName, phone: data.phone })
+      );
+      showSnack("Profile updated");
+    } catch (err) {
+      showSnack(err.message || "Couldn't save changes", "error");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const logout = () => {
@@ -61,156 +86,162 @@ const Profile = () => {
     window.location.href = "/";
   };
 
-  if (!user) return null;
+  if (!user) {
+    return (
+      <Page>
+        <div className="mx-auto max-w-4xl animate-pulse px-6 py-12">
+          <div className="h-96 rounded-2xl bg-stone-100" />
+        </div>
+      </Page>
+    );
+  }
+
+  const tabs = [
+    { id: "profile", label: "Profile", icon: User },
+    { id: "tickets", label: "My Tickets", icon: TicketIcon },
+    { id: "gifted", label: "Gifted Tickets", icon: Gift },
+  ];
+
+  const TicketRow = ({ ticket, gifted }) => (
+    <button
+      onClick={() => navigate(`/ticket/${ticket._id}`)}
+      className="flex w-full items-center justify-between border-2 border-ink bg-white px-4 py-3.5 text-left transition hover:shadow-card"
+    >
+      <div>
+        <p className="font-semibold text-ink">{ticket.eventTitle}</p>
+        <p className="text-sm text-stone-500">
+          {gifted ? `Gifted by ${ticket.purchaser?.name || "EventGhar User"}` : "Purchased ticket"}
+        </p>
+      </div>
+      <span className="text-sm font-medium text-stone-400">View →</span>
+    </button>
+  );
 
   return (
-    <div className="profile-wrapper">
-      <div className="profile-grid">
-        {/* ================= LEFT CARD ================= */}
-        <div className="profile-card left">
-          <div className="profile-user">
-            <span className="avatar">👤</span>
-            <h3>{user.fullName}</h3>
+    <Page>
+      <div className="mx-auto grid max-w-4xl gap-6 px-6 py-10 md:grid-cols-[260px_1fr] md:px-9">
+        {/* LEFT: identity + nav */}
+        <div className="h-fit space-y-1 border-2 border-ink bg-white p-5 shadow-card">
+          <div className="mb-4 flex flex-col items-center gap-2 border-b-2 border-ink pb-5 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-ink bg-marigold/20 text-ink">
+              <User className="h-7 w-7" />
+            </div>
+            <h3 className="font-display font-semibold text-ink">{user.fullName}</h3>
             {user.role === "admin" && (
-              <span className="admin-badge">ADMIN</span>
+              <span className="rounded-full bg-ink px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-paper">
+                Admin
+              </span>
             )}
           </div>
 
-          <button
-            className={`pill ${activeTab === "profile" ? "active" : ""}`}
-            onClick={() => setActiveTab("profile")}
-          >
-            Profile
-          </button>
-
-          <button
-            className={`pill ${activeTab === "tickets" ? "active" : ""}`}
-            onClick={() => setActiveTab("tickets")}
-          >
-            🎟 My Tickets
-          </button>
-
-          <button
-            className={`pill ${activeTab === "gifted" ? "active" : ""}`}
-            onClick={() => setActiveTab("gifted")}
-          >
-            🎁 Gifted Tickets
-          </button>
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={[
+                "flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition-colors",
+                activeTab === id
+                  ? "bg-raspberry/10 text-raspberry-dark"
+                  : "text-stone-600 hover:bg-stone-100",
+              ].join(" ")}
+            >
+              <Icon className="h-4 w-4" />
+              {label}
+            </button>
+          ))}
 
           {user.role === "admin" && (
             <button
-              className="admin-btn"
               onClick={() => navigate("/admin")}
+              className="mt-2 flex w-full items-center gap-2.5 rounded-xl bg-ink px-3.5 py-2.5 text-sm font-semibold text-paper transition hover:bg-stone-800"
             >
-              🔑 Admin Panel
+              <ShieldCheck className="h-4 w-4" /> Admin Panel
             </button>
           )}
 
-          <div className="notif-row">
-            <span>Notification</span>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={notif}
-                onChange={() => setNotif(!notif)}
+          <div className="mt-3 flex items-center justify-between border-t border-stone-100 px-1 pt-4">
+            <span className="text-sm text-stone-600">Email notifications</span>
+            <button
+              onClick={() => setNotif(!notif)}
+              className={[
+                "relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-0 p-0 transition-colors",
+                notif ? "bg-pine" : "bg-stone-300",
+              ].join(" ")}
+              aria-pressed={notif}
+            >
+              <span
+                className={[
+                  "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+                  notif ? "translate-x-5" : "translate-x-0",
+                ].join(" ")}
               />
-              <span className="slider"></span>
-            </label>
+            </button>
           </div>
 
-          <button className="logout-btn" onClick={logout}>
-            Log out
+          <button
+            onClick={logout}
+            className="mt-3 flex w-full items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold text-raspberry transition hover:bg-raspberry/10"
+          >
+            <LogOut className="h-4 w-4" /> Log out
           </button>
         </div>
 
-        {/* ================= RIGHT CARD ================= */}
-        <div className="profile-card right">
-          {/* ===== PROFILE TAB ===== */}
+        {/* RIGHT: content */}
+        <div className="border-2 border-ink bg-white p-6 shadow-card">
           {activeTab === "profile" && (
-            <>
-              <h4>My Profile</h4>
-
-              <input
+            <div className="space-y-4">
+              <h4 className="font-display text-lg font-semibold text-ink">My profile</h4>
+              <Input
+                label="Full name"
                 value={user.fullName}
-                onChange={(e) =>
-                  setUser({ ...user, fullName: e.target.value })
-                }
-                placeholder="Name"
+                onChange={(e) => setUser({ ...user, fullName: e.target.value })}
               />
-
-              <input value={user.email} disabled />
-
-              <input
-                value={user.phone}
-                onChange={(e) =>
-                  setUser({ ...user, phone: e.target.value })
-                }
-                placeholder="Phone Number"
+              <Input label="Email" value={user.email} disabled className="bg-stone-50 text-stone-400" />
+              <Input
+                label="Phone number"
+                value={user.phone || ""}
+                onChange={(e) => setUser({ ...user, phone: e.target.value })}
               />
-
-              <button className="save-btn" onClick={saveProfile}>
-                Save Changes
-              </button>
-            </>
+              <Button loading={saving} onClick={saveProfile}>
+                Save changes
+              </Button>
+            </div>
           )}
 
-          {/* ===== MY TICKETS TAB ===== */}
           {activeTab === "tickets" && (
-            <>
-              <h4>🎟 My Tickets</h4>
-
-              {myTickets.length === 0 && (
-                <p className="empty-state">
-                  You haven’t purchased any tickets yet.
-                </p>
+            <div className="space-y-3">
+              <h4 className="font-display text-lg font-semibold text-ink">My tickets</h4>
+              {myTickets.length === 0 ? (
+                <EmptyState
+                  icon={TicketIcon}
+                  title="No tickets yet"
+                  description="Tickets you buy will show up here."
+                />
+              ) : (
+                myTickets.map((t) => <TicketRow key={t._id} ticket={t} />)
               )}
-
-              {myTickets.map((ticket) => (
-                <div
-                  key={ticket._id}
-                  className="gift-ticket"
-                  onClick={() =>
-                    navigate(`/ticket/${ticket._id}`)
-                  }
-                >
-                  <strong>{ticket.eventTitle}</strong>
-                  <span>Purchased ticket</span>
-                </div>
-              ))}
-            </>
+            </div>
           )}
 
-          {/* ===== GIFTED TICKETS TAB ===== */}
           {activeTab === "gifted" && (
-            <>
-              <h4>🎁 Gifted Tickets</h4>
-
-              {giftedTickets.length === 0 && (
-                <p className="empty-state">
-                  No tickets have been gifted to you yet.
-                </p>
+            <div className="space-y-3">
+              <h4 className="font-display text-lg font-semibold text-ink">Gifted tickets</h4>
+              {giftedTickets.length === 0 ? (
+                <EmptyState
+                  icon={Gift}
+                  title="No gifted tickets"
+                  description="Tickets someone transfers to you will show up here."
+                />
+              ) : (
+                giftedTickets.map((t) => <TicketRow key={t._id} ticket={t} gifted />)
               )}
-
-              {giftedTickets.map((ticket) => (
-                <div
-                  key={ticket._id}
-                  className="gift-ticket"
-                  onClick={() =>
-                    navigate(`/ticket/${ticket._id}`)
-                  }
-                >
-                  <strong>{ticket.eventTitle}</strong>
-                  <span>
-                    Gifted by{" "}
-                    {ticket.purchaser?.name || "EventGhar User"}
-                  </span>
-                </div>
-              ))}
-            </>
+            </div>
           )}
         </div>
       </div>
-    </div>
+
+      {snack && <Toast message={snack.message} type={snack.type} />}
+    </Page>
   );
 };
 

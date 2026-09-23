@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NotificationProvider } from "./context/NotificationContext";
 
 import Dashboard from "./pages/Dashboard";
-import AdminDashboard from "./pages/Admin_dashbaord";
+import AdminDashboard from "./pages/AdminDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRoute from "./routes/AdminRoute";
 
@@ -12,14 +12,21 @@ import Checkout from "./pages/Checkout";
 import Ticket from "./pages/Ticket";
 import MyBookings from "./pages/MyBookings";
 import ContactUs from "./pages/ContactUs";
+import AboutUs from "./pages/AboutUs";
 import Profile from "./pages/Profile";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentFailed from "./pages/PaymentFailed";
+import TermsOfService from "./pages/TermsOfService";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RefundPolicy from "./pages/RefundPolicy";
+import NotFound from "./pages/NotFound";
+import TitleManager from "./components/TitleManager";
 
 function App() {
   return (
     <NotificationProvider>
       <Router>
+        <TitleManager />
         <Routes>
           {/* USER */}
           <Route path="/" element={<Dashboard />} />
@@ -30,8 +37,12 @@ function App() {
           <Route path="/payment-failed" element={<PaymentFailed />} />
           <Route path="/ticket/:orderId" element={<Ticket />} />
           <Route path="/contact" element={<ContactUs />} />
+          <Route path="/about" element={<AboutUs />} />
           <Route path="/my-bookings" element={<MyBookings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/refund-policy" element={<RefundPolicy />} />
 
           {/* ADMIN */}
           <Route path="/admin/login" element={<AdminLogin />} />
@@ -43,6 +54,9 @@ function App() {
               </AdminRoute>
             }
           />
+
+          {/* Anything else */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </NotificationProvider>

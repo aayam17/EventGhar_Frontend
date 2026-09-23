@@ -1,53 +1,81 @@
-import "../assets/css/StepPersonal.css";
 import { useState } from "react";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
 
 const StepPersonal = ({ order, setOrder, prev, next }) => {
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) =>
-    setOrder({
-      ...order,
-      user: { ...order.user, [e.target.name]: e.target.value },
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      user: { ...prevOrder.user, [name]: value },
+    }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: null }));
+  };
 
   const validateAndNext = () => {
     const { name, email, phone } = order.user || {};
+    const nextErrors = {};
 
-    if (!name || !email || !phone) {
-      setError("Please fill all required fields");
+    if (!name) nextErrors.name = "Full name is required";
+    if (!email) nextErrors.email = "Email is required";
+    else if (!/^\S+@\S+\.\S+$/.test(email)) nextErrors.email = "Enter a valid email address";
+    if (!phone) nextErrors.phone = "Phone number is required";
+    else if (!/^[0-9]{7,15}$/.test(phone)) nextErrors.phone = "Enter a valid phone number";
+
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
       return;
     }
 
-    setError("");
+    setErrors({});
     next();
   };
 
   return (
-    <div className="step-card personal-step">
-      <div className="personal-grid">
-        <input name="name" placeholder="Full Name" onChange={handleChange} />
-        <input
-          name="email"
-          placeholder="Email Address"
+    <div className="space-y-6 rounded-2xl border border-stone-200 bg-white p-6 shadow-card">
+      <h3 className="font-display text-lg font-semibold text-ink">Personal details</h3>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Input
+          name="name"
+          label="Full name"
+          placeholder="Aayam Bhattarai"
+          value={order.user?.name || ""}
           onChange={handleChange}
+          error={errors.name}
         />
-        <input name="phone" placeholder="Phone No" onChange={handleChange} />
-        <input
+        <Input
+          name="email"
+          label="Email address"
+          placeholder="you@example.com"
+          value={order.user?.email || ""}
+          onChange={handleChange}
+          error={errors.email}
+        />
+        <Input
+          name="phone"
+          label="Phone number"
+          placeholder="98XXXXXXXX"
+          value={order.user?.phone || ""}
+          onChange={handleChange}
+          error={errors.phone}
+        />
+        <Input
           name="address"
-          placeholder="Address (optional)"
+          label="Address (optional)"
+          placeholder="Kathmandu, Nepal"
+          value={order.user?.address || ""}
           onChange={handleChange}
         />
       </div>
 
-      {error && <p className="error-text">{error}</p>}
-
-      <div className="actions">
-        <button onClick={prev} className="prev-btn">
-          PREVIOUS
-        </button>
-        <button onClick={validateAndNext} className="next-green">
-          NEXT
-        </button>
+      <div className="flex items-center justify-between pt-2">
+        <Button variant="ghost" onClick={prev}>
+          Back
+        </Button>
+        <Button onClick={validateAndNext}>Continue to payment</Button>
       </div>
     </div>
   );

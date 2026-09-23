@@ -51,8 +51,8 @@
 
 .auth-left input:focus {
   outline: none;
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 4px rgba(231,76,60,0.18);
+  border-color: var(--color-marigold-dark, #d68f27);
+  box-shadow: 0 0 0 4px rgba(240,166,58,0.18);
 }
 
 /* PASSWORD */
@@ -76,9 +76,15 @@
   border: none;
   font-size: 16px;
   font-weight: 800;
-  background: linear-gradient(135deg, #6aa84f, #5a9c3b);
+  background: var(--color-raspberry, #d6304a);
   color: white;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: var(--color-raspberry-dark, #b3243b);
+  transform: translateY(-1px);
 }
 
 .primary-btn:disabled {
@@ -93,9 +99,32 @@
 }
 
 .switch-text span {
-  color: #2563eb;
+  color: var(--color-marigold-dark, #d68f27);
   font-weight: 700;
   cursor: pointer;
+}
+
+/* CLOSE BUTTON (shown when Auth is opened standalone, not from checkout) */
+.auth-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(23,20,15,0.06);
+  color: #17140f;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.auth-close:hover {
+  background: rgba(23,20,15,0.12);
 }
 
 /* =========================

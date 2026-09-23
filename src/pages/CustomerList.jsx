@@ -1,41 +1,45 @@
 import { useEffect, useState } from "react";
 import "../assets/css/CustomerList.css";
+import Dialog from "../components/ui/Dialog";
+import Toast, { useSnack } from "../components/ui/Toast";
+import { api, adminHeaders } from "../lib/api";
 
 const CustomerList = () => {
   const [orders, setOrders] = useState([]);
+  const [dialog, setDialog] = useState(null);
+  const [snack, showSnack] = useSnack();
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/orders")
-      .then((res) => res.json())
-      .then(setOrders)
+    fetch(api("/api/orders"), { headers: adminHeaders(false) })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then((data) => setOrders(Array.isArray(data) ? data : []))
       .catch((err) => {
         console.error("Failed to load orders", err);
         setOrders([]);
+        showSnack("Couldn't load orders. Try logging in again.", "error");
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this order?"
-    );
-    if (!confirm) return;
-
-    try {
-      const res = await fetch(
-        `http://localhost:5001/api/orders/${id}`,
-        { method: "DELETE" }
-      );
-
-      if (!res.ok) {
-        alert("Delete API not implemented yet");
-        return;
-      }
-
-      setOrders((prev) => prev.filter((o) => o._id !== id));
-    } catch (err) {
-      alert("Failed to delete order");
-      console.error(err);
-    }
+  const handleDelete = (order) => {
+    setDialog({
+      title: "Delete this order?",
+      description: `${order.user?.name || "This customer"}'s order for "${order.eventTitle}" will be removed permanently. This can't be undone.`,
+      tone: "danger",
+      confirmLabel: "Delete order",
+      onConfirm: async () => {
+        const res = await fetch(api(`/api/orders/${order._id}`), {
+          method: "DELETE",
+          headers: adminHeaders(false),
+        });
+        if (!res.ok) throw new Error("Couldn't delete the order");
+        setOrders((prev) => prev.filter((o) => o._id !== order._id));
+        showSnack("Order deleted", "success");
+      },
+    });
   };
 
   return (
@@ -48,9 +52,18 @@ const CustomerList = () => {
 
       {orders.map((order) => {
         const paymentStatus =
-          order.used
+          order.refund?.status === "APPROVED"
+            ? "REFUNDED"
+            : order.used
             ? "TICKET VERIFIED"
             : order.payment?.status || "PENDING";
+
+        const statusClass =
+          order.refund?.status === "APPROVED"
+            ? "refunded"
+            : order.used
+            ? "verified"
+            : "";
 
         return (
           <div key={order._id} className="order-card">
@@ -60,23 +73,19 @@ const CustomerList = () => {
                   {order.user?.name || "Unknown User"}
                 </strong>
                 <p className="customer-email">
-                  {order.user?.email || "—"}
+                  {order.user?.email || "Not provided"}
                 </p>
               </div>
 
               <div className="order-actions">
                 {/* ✅ SAFE STATUS BADGE */}
-                <span
-                  className={`order-status ${
-                    order.used ? "verified" : ""
-                  }`}
-                >
+                <span className={`order-status ${statusClass}`}>
                   {paymentStatus}
                 </span>
 
                 <button
                   className="delete-btn"
-                  onClick={() => handleDelete(order._id)}
+                  onClick={() => handleDelete(order)}
                 >
                   Delete
                 </button>
@@ -106,6 +115,9 @@ const CustomerList = () => {
           </div>
         );
       })}
+
+      {dialog && <Dialog {...dialog} onClose={() => setDialog(null)} />}
+      {snack && <Toast message={snack.message} type={snack.type} />}
     </div>
   );
 };
